@@ -1,0 +1,13 @@
+node_modules/
+logs/
+config/aseconfig.json 
+config/serviceAccountConfig.json
+config/config.js
+audit_reports/
+current_scans_report/
+tmp/
+xml/
+.DS_Store
+Extras/
+sampledata/DASTAutomation_Example_Data/
+src/Not_published/
