@@ -1,0 +1,6 @@
+user,full_name,email,server_group,domain,domain_type,test_policy,user_type,folder_role,application
+appscantest\user1,John Smith,jsmith@test.com,testServerGroup,demo.testfire.net,domains,Application Only;Test Only,Security Test,issue_manager,"Altoro Mutual22, AltoroJ, Demo.testfire"
+appscantest\user2,Tim Jones,tjones@test.coom,testServerGroup2,10.0.0.5,ip,Application Only;Test Only,Security Test,job_administration,"Altoro Mutual22, AltoroJ, Demo.testfire"
+appscantest\user3,Johnny AppleSeed,Jappleseed@test.com,testServergroup3,10.0.0.1-10.0.0.255,iprange,,,no_access,"Altoro Mutual22, AltoroJ, Demo.testfire"
+appscantest\user4,Jim Jebow,Jjebow@test.com,testServergroup4,,,,,report_administration,"Altoro Mutual22, AltoroJ, Demo.testfire"
+appscantest\user5,Klye Tuck,Ktuck@test.com,testServergroup5,,,,,report_consumer,"Altoro Mutual22, AltoroJ, Demo.testfire"

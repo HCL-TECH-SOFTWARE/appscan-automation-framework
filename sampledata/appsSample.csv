@@ -1,0 +1,6 @@
+applicationid,applicationacronym,applicationdescription,pciindicator,domain,domain_type,applicationcontact,tags
+News Website,Usefull information,Medium Impact,Web,In Progress,Bob,Marketing,Ed,securityonweb.com,https://securityonweb.com,Irene,onprem
+Application Security on Cloud Website,Information about Application Security on Cloud ,Unspecified,Web,Not Started,Bob,Marketing,Ed,securitybuisnesscloud.com,http://www.securitybuisnesscloud.com/software,Julie,cloud
+Application Security on Cloud Service,Our main service,High Impact,Web,Not Started,Wayne,Cloud,Francine,applicationscanservice.com,https://appscan.applicationscanservice.com,Kevin,cloud
+AppScan Enterprise,Install on-prem,High Impact,Client/Server,In Progress,Celine,On-prem,Haley,,,Nancy,onprem
+AppScan Standard,Install on-prem,High Impact,Desktop,Completed,Dave,On-prem,Haley,,,,onprem

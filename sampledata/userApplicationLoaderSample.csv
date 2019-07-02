@@ -1,0 +1,2 @@
+user,application,full_name,email,server_group,domain,domain_type,test_policy,user_type,folder_role,acronym,description,pci,contact
+User1,App1,John Doe,user@email.com,default_group,www.google.com;www.yahoo.com,domains,default_policy,admin_user,default_role,acro,Test Description,yes,Test Contact
