@@ -14,7 +14,7 @@
     "line-replace": "^1.0.2",
     "promise": "^8.0.3",
     "prompt": "^1.0.0",
-    "request": "^2.85.0",
+    "request": "^2.88.0",
     "requests": "^0.2.2",
     "split2": "^2.2.0",
     "through2": "^2.0.3",
