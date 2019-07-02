@@ -10,7 +10,7 @@
     "exec": "^0.2.1",
     "form-data": "^2.3.2",
     "he": "^1.1.1",
-    "json2csv": "^4.1.4",
+    "json2csv": "^4.5.1",
     "line-replace": "^1.0.2",
     "promise": "^8.0.3",
     "prompt": "^1.0.0",
