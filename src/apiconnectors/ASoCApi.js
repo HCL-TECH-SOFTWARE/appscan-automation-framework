@@ -136,7 +136,7 @@ var loginASoC = function (callback) {
 
 var post = function (url, body, callback) {
     validateToken(function () {
-        let requestURL = ASoC_API_URL + url + '?api_key=' + token;
+        let requestURL = ASoC_API_URL + url;
         token = 'Bearer ' + token;
         request({
             headers: {
@@ -165,7 +165,7 @@ var post = function (url, body, callback) {
 
 var get = function (url, callback) {
     validateToken(function () {
-        let requestURL = ASoC_API_URL + url + '?api_key=' + token;
+        let requestURL = ASoC_API_URL + url;
         token = 'Bearer ' + token;
         request({
             headers: {
@@ -188,7 +188,7 @@ var get = function (url, callback) {
 
 var put = function (url, body, callback) {
     validateToken(function () {
-        let requestURL = ASoC_API_URL + url + '?api_key=' + token;
+        let requestURL = ASoC_API_URL + url;
         token = 'Bearer ' + token;
         request({
             headers: {
@@ -217,7 +217,7 @@ var put = function (url, body, callback) {
 
 var downloadFile = function (filenamed, url, callback) {
     validateToken(function () {
-        let requestURL = ASoC_API_URL + url + '?api_key=' + token;
+        let requestURL = ASoC_API_URL + url;
         token = 'Bearer ' + token;
         var fileName = config.locOfXML + filenamed + '.xml';
         console.log('FILE LOC: ' + fileName)
