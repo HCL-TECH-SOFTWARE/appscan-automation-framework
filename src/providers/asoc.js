@@ -242,24 +242,3 @@ asoc.updateUser = function (userID, assetGroupArray, roleID, callback) {
         })
 }
 
-
-/**
- * Get running DAST scans
- * 
- * TODO: change to get just the Name/ID (or just ID) of the scans?
- */
-asoc.getRunningDASTScans = function (callback) {
-    logger.debug('Getting running DAST scans info from application security on cloud...');
-    let filter="((Technology%20eq%20'DynamicAnalyzer'))%20and%20((LatestExecution%2FStatus%20eq%20'Running'))"
-    let getScansURL = '/Scans?' + '$filter=' + filter;
-    asocapi.doGet(getScansURL)
-        .then((scanData) => {
-            callback(scanData);
-        })
-        .catch((err) => {
-            logger.error('Error trying to get running DAST Scan info from application security on cloud.  Error: ' + err);
-        })
-}
-
-
-
