@@ -78,6 +78,10 @@ module.exports = {
     'alwaysCreateNewScan': false,
 
 
-        // getCurrentScanJobs
-        'Loc_of_Current_Scan_report': './current_scans_report/'
+    // getCurrentScanJobs
+    'Loc_of_Current_Scan_report': './current_scans_report/',
+
+
+      // Scheduler
+      'Location_of_schedule_json': '../sampledata/schedule/scheduleSample.JSON'
 }
