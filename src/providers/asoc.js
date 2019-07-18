@@ -245,8 +245,6 @@ asoc.updateUser = function (userID, assetGroupArray, roleID, callback) {
 
 /**
  * Get running DAST scans
- * 
- * TODO: change to get just the Name/ID (or just ID) of the scans?
  */
 asoc.getRunningDASTScans = function (callback) {
     logger.debug('Getting running DAST scans info from application security on cloud...');
@@ -254,7 +252,13 @@ asoc.getRunningDASTScans = function (callback) {
     let getScansURL = '/Scans?' + '$filter=' + filter;
     asocapi.doGet(getScansURL)
         .then((scanData) => {
-            callback(scanData);
+            let scanObj = JSON.parse(JSON.stringify(scanData));
+            //console.log(JSON.stringify(scanObj));
+            let runningScanIds = [];
+            for (i=0; i<scanObj.length; i++){
+                runningScanIds.push(scanObj[i]['Id'])
+            }
+            callback(runningScanIds);
         })
         .catch((err) => {
             logger.error('Error trying to get running DAST Scan info from application security on cloud.  Error: ' + err);
