@@ -6,6 +6,9 @@ const schedule = require('node-schedule');
 const moment = require('moment');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const asoc = require('./providers/asoc');
+const fs = require('fs');
+
 const scheduleJSON = require(config.computerPath + config.Location_of_schedule_json);
 
 // Global variables
@@ -39,11 +42,40 @@ const isInBlackout = function () {
     
     if (timeNowFormated.isBetween(blackoutStartTime, blackoutEndTime)) {
         logger.debug('Inside blackout period.');
+        writeRunningScansFile(cb => {
+            logger.debug('Scan file written');
+        });
     } else {
         logger.debug('Outside blackout period.');
     }
 
 }
+
+
+
+//TODO change filename to have timestamp
+const writeRunningScansFile = function(callback) {
+    asoc.getRunningDASTScans(runningScans => {
+        let scanJson = {
+            scans: runningScans
+        };
+        writeFile('test.json', JSON.stringify(scanJson), () => {
+            callback();
+        });
+        console.log(runningScans);
+    })
+}
+
+var writeFile = function (filename, data, callback) {
+    fs.writeFile(filename, data, function (err) {
+        if (err) {
+            return logger.error('Error trying to write file.  Error: ' + err);
+        }
+        logger.debug("The file was saved!");
+        callback();
+    });
+}
+
 
 
 isInBlackout();
