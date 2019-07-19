@@ -253,7 +253,7 @@ asoc.getRunningDASTScans = function (callback) {
     asocapi.doGet(getScansURL)
         .then((scanData) => {
             let scanObj = JSON.parse(JSON.stringify(scanData));
-            //console.log(JSON.stringify(scanObj));
+//            console.log(JSON.stringify(scanObj));
             let runningScanIds = [];
             for (i=0; i<scanObj.length; i++){
                 runningScanIds.push(scanObj[i]['Id'])
@@ -262,5 +262,22 @@ asoc.getRunningDASTScans = function (callback) {
         })
         .catch((err) => {
             logger.error('Error trying to get running DAST Scan info from application security on cloud.  Error: ' + err);
+        })
+}
+
+
+/**
+ * Pause or resume a running DAST scan
+ */
+asoc.pauseresumeRunningDASTScan = function (operation, scanID, callback) {
+    let prScanURL = '/Scans/Execution/' + scanID + '/' + operation;
+    console.debug(i + 'prScanURL : ' + prScanURL);
+    let updateUserDataJSON = {};
+    asocapi.doPut(prScanURL,updateUserDataJSON)
+        .then((scanData) => {
+            callback(scanData);
+        })
+        .catch((err) => {
+            logger.error('Error trying to ' + operation + ' DAST Scan from application security on cloud.  Error: ' + err);
         })
 }

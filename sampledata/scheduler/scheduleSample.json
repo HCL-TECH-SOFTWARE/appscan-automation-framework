@@ -13,10 +13,10 @@
     },
     "Thursday": {
         "start_blackout": "10:00",
-        "end_blackout": "14:00"
+        "end_blackout": "16:00"
     },
     "Friday": {
-        "start_blackout": "10:00",
+        "start_blackout": "07:00",
         "end_blackout": "16:00"
     },
     "Saturday": {
