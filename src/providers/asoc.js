@@ -252,13 +252,13 @@ asoc.getRunningDASTScans = function (callback) {
     let getScansURL = '/Scans?' + '$filter=' + filter;
     asocapi.doGet(getScansURL)
         .then((scanData) => {
+            //console.log(scanData);
             let scanObj = JSON.parse(JSON.stringify(scanData));
-//            console.log(JSON.stringify(scanObj));
-            let runningScanIds = [];
+            let runningScanExecIds = [];
             for (i=0; i<scanObj.length; i++){
-                runningScanIds.push(scanObj[i]['Id'])
+                runningScanExecIds.push(scanObj[i]['LatestExecution']['Id'])
             }
-            callback(runningScanIds);
+            callback(runningScanExecIds);
         })
         .catch((err) => {
             logger.error('Error trying to get running DAST Scan info from application security on cloud.  Error: ' + err);
