@@ -10,6 +10,7 @@ const asoc = require('./providers/asoc');
 const fs = require('fs');
 
 const scheduleJSON = require(config.computerPath + config.Location_of_schedule_json);
+var defaultScanWrkFile = config.Location_of_scan_temp_file;
 
 // Global variables
 var d;
@@ -39,7 +40,7 @@ const isInBlackout = function () {
 
     logger.debug('time: ' + time)
     logger.debug(scheduleJSON[dayOfWeek]);
-    
+
     if (timeNowFormated.isBetween(blackoutStartTime, blackoutEndTime)) {
         logger.debug('Inside blackout period.');
         writeRunningScansFile(cb => {
@@ -50,6 +51,9 @@ const isInBlackout = function () {
         });
     } else {
         logger.debug('Outside blackout period.');
+        pauseresumeRunningScans('Resume', action => {
+            logger.debug('Pause running scans...');
+        })
     }
 
 }
@@ -62,41 +66,42 @@ const isInBlackout = function () {
 *     - Loop through execution id's for all running scans provided and then call REST query to 
 *     - resume them one by one (if given 'resume' parameter).
 */
-const pauseresumeRunningScans = function(operation, callback) {
+const pauseresumeRunningScans = function (operation, callback) {
     logger.debug(operation + ' running DAST scans from Application Security on Cloud...');
-    var allowedOperations = ['Pause','Resume'];
-    if (allowedOperations.includes(operation)){
-        var currScansJson = require('../test.json');
-        var fs = require('fs');
-        var data = {};
-        fs.readFile('currScansJson', 'utf8',
-            function (err, contents) {
-            });
-        if (currScansJson.scans) {
-            var scanArray = currScansJson.scans;
-            var i;
-            for (i=0; i<scanArray.length; i++){
-                asoc.pauseresumeRunningDASTScan(operation,scanArray[i]);
+    fs.readFile(defaultScanWrkFile, 'utf8',
+        function (err, contents) {
+            if (err) {
+                return logger.error('Error trying to read file, ' + err);
+            } else {
+                let parseJson = JSON.parse(contents);
+                if (parseJson.scans) {
+                    console.log('Scan Array: ' + parseJson.scans)
+                    var scanArray = parseJson.scans;
+                    var i;
+                    for (i = 0; i < scanArray.length; i++) {
+                        asoc.pauseresumeRunningDASTScan(operation, scanArray[i], (data) => {
+                            logger.debug('Data: ' + JSON.stringify(data.body));
+                        });
+                    }
+                    callback();
+                } else {
+                    logger.error('No currently executing scans.');
+                }
             }
-        } else {
-            logger.error('No currently executing scans.');
-        }
-    } else {
-        logger.error('Invalid operation parameter.');
-    }
+        });
 }
 
 
 //TODO change filename to have timestamp
-const writeRunningScansFile = function(callback) {
+const writeRunningScansFile = function (callback) {
     asoc.getRunningDASTScans(runningScans => {
-        if (runningScans.length > 0){
-        let scanJson = {
-            scans: runningScans
-        };
-        writeFile('test.json', JSON.stringify(scanJson), () => {
-            callback();
-        });
+        if (runningScans.length > 0) {
+            let scanJson = {
+                scans: runningScans
+            };
+            writeFile(defaultScanWrkFile, JSON.stringify(scanJson), () => {
+                callback();
+            });
         }
         console.log(runningScans);
     })

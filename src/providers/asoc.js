@@ -38,7 +38,7 @@ asoc.getScanInfo = function (scanID, callback) {
  * Get Application Id
  */
 asoc.getAppId = function (name, callback) {
-    let query = querystring.stringify({filter: 'Name eq ' + '\'' + name + '\''})
+    let query = querystring.stringify({ filter: 'Name eq ' + '\'' + name + '\'' })
     let AppURL = '/Apps?$' + query;
     //console.log('AppURL: ' + AppURL);
     asocapi.doGet(AppURL)
@@ -248,14 +248,14 @@ asoc.updateUser = function (userID, assetGroupArray, roleID, callback) {
  */
 asoc.getRunningDASTScans = function (callback) {
     logger.debug('Getting running DAST scans info from application security on cloud...');
-    let filter="((Technology%20eq%20'DynamicAnalyzer'))%20and%20((LatestExecution%2FStatus%20eq%20'Running'))"
+    let filter = "((Technology%20eq%20'DynamicAnalyzer'))%20and%20((LatestExecution%2FStatus%20eq%20'Running'))"
     let getScansURL = '/Scans?' + '$filter=' + filter;
     asocapi.doGet(getScansURL)
         .then((scanData) => {
             //console.log(scanData);
-            let scanObj = JSON.parse(JSON.stringify(scanData));
+            let scanObj = JSON.parse(JSON.stringify(scanData.body));
             let runningScanExecIds = [];
-            for (i=0; i<scanObj.length; i++){
+            for (i = 0; i < scanObj.length; i++) {
                 runningScanExecIds.push(scanObj[i]['LatestExecution']['Id'])
             }
             callback(runningScanExecIds);
@@ -271,13 +271,16 @@ asoc.getRunningDASTScans = function (callback) {
  */
 asoc.pauseresumeRunningDASTScan = function (operation, scanID, callback) {
     let prScanURL = '/Scans/Execution/' + scanID + '/' + operation;
-    console.debug(i + 'prScanURL : ' + prScanURL);
-    let updateUserDataJSON = {};
-    asocapi.doPut(prScanURL,updateUserDataJSON)
-        .then((scanData) => {
-            callback(scanData);
-        })
-        .catch((err) => {
-            logger.error('Error trying to ' + operation + ' DAST Scan from application security on cloud.  Error: ' + err);
-        })
+    var allowedOperations = ['Pause', 'Resume'];
+    if (allowedOperations.includes(operation)) {
+        asocapi.doPut(prScanURL, null)
+            .then((scanData) => {
+                callback(scanData);
+            })
+            .catch((err) => {
+                logger.error('Error trying to ' + operation + ' DAST Scan from application security on cloud.  Error: ' + err);
+            })
+    } else {
+        return logger.error('Error trying to pause or resume scan.  Invalid operation parameter, parameter must be: Pause or Resume');
+    }
 }
