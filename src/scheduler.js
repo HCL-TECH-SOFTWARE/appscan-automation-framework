@@ -92,7 +92,7 @@ const pauseresumeRunningScans = function (operation, callback) {
                                 let scanJson = {
                                     scans: tempScanArray
                                 };
-                                logger.debug('STUFF: ' + JSON.stringify(scanJson))
+                                logger.debug('STUFF: ' + JSON.stringify(scanJson));
                                 writeFile(defaultScanWrkFile, JSON.stringify(scanJson), () => {
                                 });
                             }
