@@ -75,12 +75,27 @@ const pauseresumeRunningScans = function (operation, callback) {
             } else {
                 let parseJson = JSON.parse(contents);
                 if (parseJson.scans) {
+                    let tempScanArray = [];
+                    tempScanArray.push(parseJson.scans);
                     console.log('Scan Array: ' + parseJson.scans)
-                    var scanArray = parseJson.scans;
+                    console.log('Scan Array: ' + tempScanArray)
                     var i;
-                    for (i = 0; i < scanArray.length; i++) {
-                        asoc.pauseresumeRunningDASTScan(operation, scanArray[i], (data) => {
+                    for (i = 0; i < tempScanArray.length; i++) {
+                        asoc.pauseresumeRunningDASTScan(operation, tempScanArray[i], (data) => {
+                            //CHECK IF PAUSING IS SUCCESSFUL THEN REMOVE FROM LIST
                             logger.debug('Data: ' + JSON.stringify(data.body));
+                            if (operation == 'Resume') {
+                                tempScanArray = tempScanArray.filter((value, index, arr) => {
+                                    logger.debug('DONE')
+                                    return value == tempScanArray[i]
+                                })
+                                let scanJson = {
+                                    scans: tempScanArray
+                                };
+                                logger.debug('STUFF: ' + JSON.stringify(scanJson))
+                                writeFile(defaultScanWrkFile, JSON.stringify(scanJson), () => {
+                                });
+                            }
                         });
                     }
                     callback();
