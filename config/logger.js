@@ -7,10 +7,11 @@
  // Dependencies
  const winston = require('winston');
  const fs = require('fs');
+ const path = require('path');
  
  // Global variables
  const env = process.env.NODE_ENV || 'development';
- const logDir = 'logs';
+ const logDir = 'log';
  
  winston.emitErrs = true;
  

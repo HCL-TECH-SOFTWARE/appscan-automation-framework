@@ -8,12 +8,14 @@ var data = {};
 fs.readFile('asePasswordJson', 'utf8',
     function (err, contents) {
     });
+    /// USE API KEY THEN REMOVE IT
 if (asePasswordJson.asePasswordJson) {
     data.asePass = encryption.decrypt(asePasswordJson.asePasswordJson)
 } else {
     logger.error('No ASE password set.  Please run node scripts/updateASEPassword.js first....');
 }
 
+// Move this out to the script of the run as a service script
 var serviceAccountPasswordJson = require('./serviceAccountConfig.json');
 
 if (serviceAccountPasswordJson.serviceaccountpassword) {
