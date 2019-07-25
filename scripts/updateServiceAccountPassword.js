@@ -12,9 +12,9 @@ checkForFile('../config/serviceAccountConfig.json', () => {
     var os = process.platform;
     var filePath;
     if (os === 'win32') {
-        filePath = config.computerPath + "/config/serviceAccountConfig.json"
+        filePath = config.frameworkPath + "/config/serviceAccountConfig.json"
     } else {
-        filePath = config.computerPath + "/config/serviceAccountConfig.json"
+        filePath = config.frameworkPath + "/config/serviceAccountConfig.json"
     }
     var encryption = require('../src/providers/encrypt');
     serviceAccountPasswordJson = require('../config/serviceAccountConfig.json');
