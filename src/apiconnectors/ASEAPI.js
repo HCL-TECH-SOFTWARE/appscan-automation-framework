@@ -182,6 +182,9 @@ var loginToASE = function (callback) {
         //token still valid
         callback();
     } else {
+        if (!config.ASEKeyId || !config.ASEKeySecret) {
+            return logger.error('ASE API key ID and/or key secret is missing.  Please add them to config.js (ASEKeyId, ASEKeySecret)');
+        }
         // token not valid
         console.log('Logging into AppScan Enterprise...');
         var loginURL = ASEURL + '/keylogin/apikeylogin'
