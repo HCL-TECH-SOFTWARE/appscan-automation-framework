@@ -8,10 +8,11 @@
  const winston = require('winston');
  const fs = require('fs');
  const path = require('path');
+ const config = require('./config');
  
  // Global variables
  const env = process.env.NODE_ENV || 'development';
- const logDir = 'log';
+ const logDir = config.frameworkLogsDir;
  
  winston.emitErrs = true;
  

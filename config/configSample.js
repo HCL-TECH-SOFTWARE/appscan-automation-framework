@@ -1,5 +1,6 @@
-const setupEnv = require('./setupEnv');
 const path = require('path');
+const frameworkDir = path.resolve(path.join(__dirname, '..'));
+
 
 module.exports = {
     'frameworkPath': path.resolve(path.join(__dirname, '..')),
@@ -9,7 +10,6 @@ module.exports = {
     'keySecret': '',
     'ASEURL': 'https://<ASE URL>:<ASE PORT>/ase/api',
     'ASEUserID': '<DOMAIN_NAME>\\<USER_NAME>',
-    'ASEPass': setupEnv.asePass,
     'ASEKeyId': '',
     'ASEKeySecret': '',
     'ASEProxyServerURL': 'http://<Proxy Domain>:<Proxy Port (default is 8383)>/automation/',
@@ -36,7 +36,6 @@ module.exports = {
     'locOfASEProxyFile': null,
     'serviceAccountDomain': '<DOMAIN_NAME>',
     'serviceAccountUserID': '<USER_NAME>',
-    'serviceAccountPass': setupEnv.serviceAccountPass,
 
 
 
