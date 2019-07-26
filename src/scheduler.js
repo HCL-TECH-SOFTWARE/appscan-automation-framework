@@ -52,7 +52,7 @@ const isInBlackout = function () {
     } else {
         logger.debug('Outside blackout period.');
         pauseresumeRunningScans('Resume', action => {
-            logger.debug('Pause running scans...');
+            logger.debug('Rusume running scans...');
         })
     }
 
@@ -74,11 +74,9 @@ const pauseresumeRunningScans = function (operation, callback) {
                 return logger.error('Error trying to read file, ' + err);
             } else {
                 let parseJson = JSON.parse(contents);
-                if (parseJson.scans) {
+                if (parseJson.scans && parseJson.scans.length > 0) {
                     let tempScanArray = [];
                     tempScanArray.push(parseJson.scans);
-                    console.log('Scan Array: ' + parseJson.scans)
-                    console.log('Scan Array: ' + tempScanArray)
                     var i;
                     for (i = 0; i < tempScanArray.length; i++) {
                         asoc.pauseresumeRunningDASTScan(operation, tempScanArray[i], (data) => {
