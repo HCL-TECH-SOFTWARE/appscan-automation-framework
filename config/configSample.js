@@ -10,6 +10,8 @@ module.exports = {
     'ASEURL': 'https://<ASE URL>:<ASE PORT>/ase/api',
     'ASEUserID': '<DOMAIN_NAME>\\<USER_NAME>',
     'ASEPass': setupEnv.asePass,
+    'ASEKeyId': '',
+    'ASEKeySecret': '',
     'ASEProxyServerURL': 'http://<Proxy Domain>:<Proxy Port (default is 8383)>/automation/',
     'ASEProxyServerDomain': '<Proxy Domain>',
     'aseProxy': {
