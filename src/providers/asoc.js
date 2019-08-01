@@ -242,7 +242,3 @@ asoc.updateUser = function (userID, assetGroupArray, roleID, callback) {
         })
 }
 
-
-
-
-

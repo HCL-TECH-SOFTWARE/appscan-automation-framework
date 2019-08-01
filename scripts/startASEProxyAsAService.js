@@ -6,7 +6,16 @@
 var service = require('node-windows').Service;
 const config = require('../config/config');
 const locOfASEProxyFile = config.locOfASEProxyFile;
+const logger = require('../config/logger');
 var unistallService = false;
+var encryption = require('../src/providers/encrypt');
+var serviceAccountPasswordJson = require('../config/serviceAccountConfig.json');
+var serviceAccountPassword;
+if (serviceAccountPasswordJson.serviceaccountpassword) {
+    serviceAccountPassword = encryption.decrypt(serviceAccountPasswordJson.serviceaccountpassword)
+} else {
+    return logger.error('ERROR service account password does not exist.  Please run scripts/updateServiceAccountPassword.js first...');
+}
 
 
 // Check if location of ASE proxy file is defined or not if not stop script
@@ -34,7 +43,7 @@ var aseService = new service({
 // User that logs in for the service
 aseService.logOnAs.domain = config.serviceAccountDomain;
 aseService.logOnAs.account = config.serviceAccountUserID;
-aseService.logOnAs.password = config.serviceAccountPass;
+aseService.logOnAs.password = serviceAccountPassword;
 
 
 
