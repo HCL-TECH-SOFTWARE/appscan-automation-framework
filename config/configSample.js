@@ -3,7 +3,8 @@ const frameworkDir = path.resolve(path.join(__dirname, '..'));
 
 
 module.exports = {
-    'frameworkPath': path.resolve(path.join(__dirname, '..')),
+    'frameworkPath': frameworkDir,
+    'frameworkLogsDir': path.resolve(path.join(frameworkDir, 'logs')),
     'saToolLocation': '<LOCATION_OF_THE_SA_CLIENT_TOOL>',
     'ASoCURL': 'https://appscan.ibmcloud.com/api/v2',
     'keyId': '',
