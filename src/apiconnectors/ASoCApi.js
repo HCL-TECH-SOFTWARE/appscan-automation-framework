@@ -43,11 +43,11 @@ module.exports = {
 
     doGet: function (url) {
         return new Promise((resolve, reject) => {
-            get(url, function (data, err) {
+            get(url, function (err, response) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(data);
+                    resolve(response);
                 }
             })
         })
@@ -60,12 +60,12 @@ module.exports = {
 
     doPost: function (url, body) {
         return new Promise((resolve, reject) => {
-            post(url, body, function (data, err) {
+            post(url, body, function (err, response) {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    resolve(data);
+                    resolve(response);
                 }
             })
         })
@@ -77,12 +77,12 @@ module.exports = {
 
     doPut: function (url, body) {
         return new Promise((resolve, reject) => {
-            put(url, body, function (data, err) {
+            put(url, body, function (err, response) {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    resolve(data);
+                    resolve(response);
                 }
             })
         })
@@ -147,14 +147,14 @@ var post = function (url, body, callback) {
             json: true,   // <--Very important!!!
             body: body,
             rejectUnauthorized: false
-        }, function (error, response, body) {
+        }, function (error, response) {
             if (error) {
                 callback(null, error);
             } else {
                 if (response.statusCode == 201) {
-                    callback(body, null);
+                    callback(response, null);
                 } else {
-                    callback(null, body.Message);
+                    callback(null, response);
                 }
             }
         })
@@ -175,11 +175,11 @@ var get = function (url, callback) {
             method: "GET",
             json: true,   // <--Very important!!!
             rejectUnauthorized: false
-        }, function (error, response, body) {
+        }, function (error, response) {
             if (error) {
-                callback(null, error);
+                callback(error, null);
             } else {
-                callback(body, null);
+                callback(null, response);
             }
         })
     })
@@ -199,14 +199,14 @@ var put = function (url, body, callback) {
             json: true,   // <--Very important!!!
             body: body,
             rejectUnauthorized: false
-        }, function (error, response, body) {
+        }, function (error, response) {
             if (error) {
-                callback(null, error);
+                callback(error, null);
             } else {
                 if (response.statusCode == 201) {
-                    callback(body, null);
+                    callback(null, response);
                 } else {
-                    callback(null, body.Message);
+                    callback(null, response);
                 }
             }
         })
