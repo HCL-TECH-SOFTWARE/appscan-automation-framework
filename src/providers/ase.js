@@ -1334,6 +1334,33 @@ ase.getReport = function (reportID, path, filename, callback) {
 
 
 
+/**
+ * Returns issue information of application
+ * 
+ * @param {*} issueID - (required) ID of issue which belongs to the given app * 
+ * @param {*} appID - (required) ID of application that you want to get the issue information of
+ */
+
+ase.getApplicationIssueInfo = function (issueID, appID, callback) {
+    logger.debug('Getting issue information of application...');
+    let getAppIssueInfoURL = '/issues/' + issueID + '/application/' + appID;
+
+
+    aseapi.doGet(getAppIssueInfoURL)
+        .then((data) => {
+            callback(data);
+        })
+        .catch((err) => {
+            logger.error('Error trying to get issue information of application, ' + err);
+            if (global.emitErrors) util.emitError(err);
+        })
+}
+
+
+
+
+
+
 
 
 
