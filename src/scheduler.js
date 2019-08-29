@@ -9,7 +9,7 @@ const logger = require('../config/logger');
 const asoc = require('./providers/asoc');
 const fs = require('fs');
 
-const scheduleJSON = require(config.computerPath + config.Location_of_schedule_json);
+const scheduleJSON = require(config.frameworkPath + config.Location_of_schedule_json);
 var defaultScanWrkFile = config.Location_of_scan_temp_file;
 
 // Global variables
@@ -22,41 +22,99 @@ if (!scheduleJSON) {
     return logger.error('Error location of schedule JSON file does not exist.  Please specify location in config.js file for key Location_of_schedule_json.  Sample of schedule JSON is in sampledata/scheduler/scheduleSample.JSON.');
 }
 
-schedule.scheduleJob('00 * * * *', function () {
+schedule.scheduleJob('0 */30 * * * *', function () {
     d = new Date();
     console.log('Ran job @ ' + d.getHours() + ':' + d.getMinutes());
-    isInBlackout();
+    isInScanWindow()
 })
 
-const isInBlackout = function () {
-    logger.debug('Checking if inside blackout time period...');
-    let timeFormat = 'HH:mm';
+// Checks if the scan is inside or outside of the scan window based on the current time
+// The format of the date in the schdule.JSON file for start_scan_window and end_scan_window
+// must be MM/DD/YYYY HH:mm
+// This function processes it for each scan one at a time and needs to complete the processing of each 
+// scan before it moves on to the next one
+const isInScanWindow = function () {
     let timeNow = moment();
-    let dayOfWeek = timeNow.format('dddd');
+    let timeFormat = 'MM/DD/YYYY HH:mm';
     let time = timeNow.format(timeFormat);
     let timeNowFormated = moment(time, timeFormat);
-    let blackoutStartTime = moment(scheduleJSON[dayOfWeek].start_blackout, timeFormat);
-    let blackoutEndTime = moment(scheduleJSON[dayOfWeek].end_blackout, timeFormat);
+    var scanListIndex = 0;
+    processNextScan();
 
-    logger.debug('time: ' + time)
-    logger.debug(scheduleJSON[dayOfWeek]);
 
-    if (timeNowFormated.isBetween(blackoutStartTime, blackoutEndTime)) {
-        logger.debug('Inside blackout period.');
-        writeRunningScansFile(cb => {
-            logger.debug('Scan file written');
-            pauseresumeRunningScans('Pause', action => {
-                logger.debug('Pause running scans...');
-            })
-        });
-    } else {
-        logger.debug('Outside blackout period.');
-        pauseresumeRunningScans('Resume', action => {
-            logger.debug('Rusume running scans...');
-        })
+    // Increments the scanListIndex which is the index for the scans in schedule.JSON file
+    // checks if it completely itterated through the list and stops if it has
+    function incrementScanIndex() {
+        if (scanListIndex < scheduleJSON.scans.length - 1) {
+            logger.debug('Processing next scan...')
+            scanListIndex++;
+            processNextScan();
+        } else {
+            logger.debug('Completed processing all scans...');
+        }
     }
 
+
+    // Checks if the scan is inside or outside the scan windows with the current time
+    function processNextScan() {
+        let scanInfo = { scanID: null, isInsideWindow: false };
+        logger.debug('Checking if inside blackout time period...');
+        let scanWindowStart = moment(scheduleJSON.scans[scanListIndex].start_scan_window, timeFormat);
+        let scanWindowEnd = moment(scheduleJSON.scans[scanListIndex].end_scan_window, timeFormat);
+
+
+        if (timeNowFormated.isBetween(scanWindowStart, scanWindowEnd)) {
+            logger.debug('Inside blackout period.');
+            scanInfo.scanID = scheduleJSON.scans[scanListIndex].scanID
+            scanInfo.isInsideWindow = true;
+        } else {
+            logger.debug('Outside blackout period.');
+            scanInfo.scanID = scheduleJSON.scans[scanListIndex].scanID
+            scanInfo.isInsideWindow = false;
+        }
+
+        processScan(scanInfo, () => {
+            logger.debug('Completed processing scan.');
+            incrementScanIndex();
+        })
+    }
 }
+
+const processScan = function (scanDetails, callback) {
+    logger.debug('Processing scan: ' + scanDetails.scanID + ' is scan in windows: ' + scanDetails.isInsideWindow);
+    callback();
+}
+
+// const isInBlackout = function () {
+//     logger.debug('Checking if inside blackout time period...');
+//     let timeFormat = 'HH:mm';
+//     let timeFormat2 = 'MM/DD/YYYY HH:mm';
+//     let timeNow = moment();
+//     let dayOfWeek = timeNow.format('dddd');
+//     let time = timeNow.format(timeFormat);
+//     let timeNowFormated = moment(time, timeFormat);
+//     let blackoutStartTime = moment(scheduleJSON[dayOfWeek].start_blackout, timeFormat);
+//     let blackoutEndTime = moment(scheduleJSON[dayOfWeek].end_blackout, timeFormat);
+
+//     logger.debug('time: ' + time)
+//     logger.debug(scheduleJSON[dayOfWeek]);
+
+//     if (timeNowFormated.isBetween(blackoutStartTime, blackoutEndTime)) {
+//         logger.debug('Inside blackout period.');
+//         writeRunningScansFile(cb => {
+//             logger.debug('Scan file written');
+//             pauseresumeRunningScans('Pause', action => {
+//                 logger.debug('Pause running scans...');
+//             })
+//         });
+//     } else {
+//         logger.debug('Outside blackout period.');
+//         pauseresumeRunningScans('Resume', action => {
+//             logger.debug('Rusume running scans...');
+//         })
+//     }
+
+// }
 
 /**
 *     - Open and read json file created by getRunningDASTScans.
@@ -132,4 +190,4 @@ var writeFile = function (filename, data, callback) {
 
 
 
-isInBlackout();
+isInScanWindow()
