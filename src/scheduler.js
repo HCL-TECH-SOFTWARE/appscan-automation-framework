@@ -25,7 +25,7 @@ if (!scheduleJSON) {
 schedule.scheduleJob('0 */30 * * * *', function () {
     d = new Date();
     console.log('Ran job @ ' + d.getHours() + ':' + d.getMinutes());
-    isInScanWindow()
+    isInScanWindow();
 })
 
 // Checks if the scan is inside or outside of the scan window based on the current time
