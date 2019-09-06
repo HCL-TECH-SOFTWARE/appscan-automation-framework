@@ -58,17 +58,17 @@ const isInScanWindow = function () {
     // Checks if the scan is inside or outside the scan windows with the current time
     function processNextScan() {
         let scanInfo = { scanID: null, isInsideWindow: false };
-        logger.debug('Checking if inside blackout time period...');
+        logger.debug('Checking if inside allowed scan window...');
         let scanWindowStart = moment(scheduleJSON.scans[scanListIndex].start_scan_window, timeFormat);
         let scanWindowEnd = moment(scheduleJSON.scans[scanListIndex].end_scan_window, timeFormat);
 
 
         if (timeNowFormated.isBetween(scanWindowStart, scanWindowEnd)) {
-            logger.debug('Inside blackout period.');
+            logger.debug('Inside scan window');
             scanInfo.scanID = scheduleJSON.scans[scanListIndex].scanID
             scanInfo.isInsideWindow = true;
         } else {
-            logger.debug('Outside blackout period.');
+            logger.debug('Outside scan window');
             scanInfo.scanID = scheduleJSON.scans[scanListIndex].scanID
             scanInfo.isInsideWindow = false;
         }
@@ -82,6 +82,25 @@ const isInScanWindow = function () {
 
 const processScan = function (scanDetails, callback) {
     logger.debug('Processing scan: ' + scanDetails.scanID + ' is scan in windows: ' + scanDetails.isInsideWindow);
+
+    asoc.getScanInfo(scanDetails.scanId, scanData => {
+        if (scanData.body['Key'] === 'INVALID_SCAN_IDENTIFIER') {
+            logger.debug('Invalid scanId: ' + scanId);
+            return;
+        }
+
+        // scanId is valid
+        let scanExecutionId = scanData.body['LatestExecution']['Id'];
+        let scanStatus = scanData.body['LatestExecution']['Status'];
+        logger.debug('ExecutionID: ' + scanExecutionId);
+        logger.debug('Status: ' + scanStatus);
+        if (scanDetails.isInsideWindow === false && scanStatus === 'Running') {
+            // pause scan
+        } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused')) {
+            // start scan
+        }
+    });
+
     callback();
 }
 
