@@ -84,22 +84,31 @@ const processScan = function (scanDetails, callback) {
     logger.debug('Processing scan: ' + scanDetails.scanID + ' is scan in windows: ' + scanDetails.isInsideWindow);
 
     asoc.getScanInfo(scanDetails.scanId, scanData => {
-        if (scanData.body['Key'] === 'INVALID_SCAN_IDENTIFIER') {
+        if (scanData.body.Key === 'INVALID_SCAN_IDENTIFIER') {
             logger.debug('Invalid scanId: ' + scanId);
             return;
         }
 
-        // scanId is valid
-        let scanExecutionId = scanData.body['LatestExecution']['Id'];
-        let scanStatus = scanData.body['LatestExecution']['Status'];
+         // scanId is valid
+        let scanExecutionId = '';
+        let scanStatus = '';
+       
+        if (scanData.body.LatestExecution) {
+          scanExecutionId = scanData.body.LatestExecution.Id;
+          scanStatus = scanData.body.LatestExecution.Status;
+        } else {
+          //scan has been configured but never run
+          scanStatus = 'notStarted';
+        }
+        
         logger.debug('ExecutionID: ' + scanExecutionId);
         logger.debug('Status: ' + scanStatus);
         if (scanDetails.isInsideWindow === false && scanStatus === 'Running') {
             // pause scan
-        } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused')) {
+        } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused' || scanStatus === 'notStarted')) {
             // start scan
         }
-    });
+    }); 
 
     callback();
 }
