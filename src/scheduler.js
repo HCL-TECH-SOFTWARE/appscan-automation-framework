@@ -129,6 +129,8 @@ const processScan = function (scanDetails, callback) {
                     callback();
                 });
             }
+        } else {
+            callback();
         }
     });
 
