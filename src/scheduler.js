@@ -57,7 +57,7 @@ const isInScanWindow = function () {
 
     // Checks if the scan is inside or outside the scan windows with the current time
     function processNextScan() {
-        let scanInfo = { scanID: null, isInsideWindow: false };
+        let scanInfo = { scanId: null, isInsideWindow: false };
         logger.debug('Checking if inside allowed scan window...');
         let scanWindowStart = moment(scheduleJSON.scans[scanListIndex].start_scan_window, timeFormat);
         let scanWindowEnd = moment(scheduleJSON.scans[scanListIndex].end_scan_window, timeFormat);
@@ -65,11 +65,11 @@ const isInScanWindow = function () {
 
         if (timeNowFormated.isBetween(scanWindowStart, scanWindowEnd)) {
             logger.debug('Inside scan window');
-            scanInfo.scanID = scheduleJSON.scans[scanListIndex].scanID
+            scanInfo.scanId = scheduleJSON.scans[scanListIndex].scanId
             scanInfo.isInsideWindow = true;
         } else {
             logger.debug('Outside scan window');
-            scanInfo.scanID = scheduleJSON.scans[scanListIndex].scanID
+            scanInfo.scanId = scheduleJSON.scans[scanListIndex].scanId
             scanInfo.isInsideWindow = false;
         }
 
@@ -81,11 +81,13 @@ const isInScanWindow = function () {
 }
 
 const processScan = function (scanDetails, callback) {
-    logger.debug('Processing scan: ' + scanDetails.scanID + ' is scan in windows: ' + scanDetails.isInsideWindow);
+    logger.debug('Processing scan: ' + scanDetails.scanId + ' is scan in windows: ' + scanDetails.isInsideWindow);
 
     asoc.getScanInfo(scanDetails.scanId, scanData => {
+        console.log(scanData.body);
         if (scanData.body.Key === 'INVALID_SCAN_IDENTIFIER') {
             logger.debug('Invalid scanId: ' + scanId);
+            //TODO - this is not catching invalid scan id of "0000003" ???
             return;
         }
 
@@ -101,19 +103,26 @@ const processScan = function (scanDetails, callback) {
             scanStatus = 'notStarted';
         }
 
-        logger.debug('ExecutionID: ' + scanExecutionId);
-        logger.debug('Status: ' + scanStatus);
+        //logger.debug('ExecutionID: ' + scanExecutionId);
+        //logger.debug('Status: ' + scanStatus);
 
+
+        //TODO add note when skipping running scans? 
+        //TODO fix logging output order
+       
         if (scanDetails.isInsideWindow === false && scanStatus === 'Running') {
             // pause scan
+            logger.debug('Scan is running but scan window has expired - pausing scan, scanExecutionId:  ' + scanExecutionId);
             asoc.pauseOrResumeDASTScan('Pause', scanExecutionId, (data) => {
             });
         } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused' || scanStatus === 'notStarted')) {
             // start scan
             if (scanStatus === 'notStarted') {
+                logger.debug('Inside valid scan window. Scan not previously started. Starting scanId:  ' + scanDetails.scanId);
                 asoc.startDASTScan(scanDetails.scanId, (data) => {
                 });
             } else {
+                logger.debug('Inside valid scan window. Scan is currently paused. Restarting scanExecutionId:  ' + scanExecutionId);
                 asoc.pauseOrResumeDASTScan('Resume', scanExecutionId, (data) => {
                 });
             }
