@@ -267,10 +267,12 @@ asoc.getRunningDASTScans = function (callback) {
 
 
 /**
- * Pause or resume a running DAST scan
+ * Pause or resume a DAST scan
+ * @param {*} operation - Pause, Resume
+ * @param {*} executionId - ExecutionId of the scan
  */
-asoc.pauseresumeRunningDASTScan = function (operation, scanID, callback) {
-    let prScanURL = '/Scans/Execution/' + scanID + '/' + operation;
+asoc.pauseOrResumeDASTScan = function (operation, executionId, callback) {
+    let prScanURL = '/Scans/Execution/' + executionId + '/' + operation;
     var allowedOperations = ['Pause', 'Resume'];
     if (allowedOperations.includes(operation)) {
         asocapi.doPut(prScanURL, null)
@@ -283,4 +285,22 @@ asoc.pauseresumeRunningDASTScan = function (operation, scanID, callback) {
     } else {
         return logger.error('Error trying to pause or resume scan.  Invalid operation parameter, parameter must be: Pause or Resume');
     }
+}
+
+
+/**
+ * Starts DAST scan on ASoC that has not been started before
+ * @param {*} scanId - ScanId of the scan that you are trying to start
+ */
+asoc.startDASTScan = function (scanId, callback) {
+    let startDASTScanURL = '/Scans/' + scanId + '/Executions';
+    let body = {};
+
+    asocapi.doPost(startDASTScanURL, body)
+    .then((scanData) => {
+        callback(scanData);
+    })
+    .catch((err) => {
+        logger.error('Error trying to start DAST scan from application security on cloud.  Error: ' + err);
+    })
 }

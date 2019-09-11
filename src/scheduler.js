@@ -89,60 +89,44 @@ const processScan = function (scanDetails, callback) {
             return;
         }
 
-         // scanId is valid
+        // scanId is valid
         let scanExecutionId = '';
         let scanStatus = '';
-       
+
         if (scanData.body.LatestExecution) {
-          scanExecutionId = scanData.body.LatestExecution.Id;
-          scanStatus = scanData.body.LatestExecution.Status;
+            scanExecutionId = scanData.body.LatestExecution.Id;
+            scanStatus = scanData.body.LatestExecution.Status;
         } else {
-          //scan has been configured but never run
-          scanStatus = 'notStarted';
+            //scan has been configured but never run
+            scanStatus = 'notStarted';
         }
-        
+
         logger.debug('ExecutionID: ' + scanExecutionId);
         logger.debug('Status: ' + scanStatus);
+
         if (scanDetails.isInsideWindow === false && scanStatus === 'Running') {
             // pause scan
+            asoc.pauseOrResumeDASTScan('Pause', scanExecutionId, (data) => {
+            });
         } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused' || scanStatus === 'notStarted')) {
             // start scan
+            if (scanStatus === 'notStarted') {
+                asoc.startDASTScan(scanDetails.scanId, (data) => {
+                });
+            } else {
+                asoc.pauseOrResumeDASTScan('Resume', scanExecutionId, (data) => {
+                });
+            }
         }
-    }); 
+    });
 
     callback();
 }
 
-// const isInBlackout = function () {
-//     logger.debug('Checking if inside blackout time period...');
-//     let timeFormat = 'HH:mm';
-//     let timeFormat2 = 'MM/DD/YYYY HH:mm';
-//     let timeNow = moment();
-//     let dayOfWeek = timeNow.format('dddd');
-//     let time = timeNow.format(timeFormat);
-//     let timeNowFormated = moment(time, timeFormat);
-//     let blackoutStartTime = moment(scheduleJSON[dayOfWeek].start_blackout, timeFormat);
-//     let blackoutEndTime = moment(scheduleJSON[dayOfWeek].end_blackout, timeFormat);
 
-//     logger.debug('time: ' + time)
-//     logger.debug(scheduleJSON[dayOfWeek]);
 
-//     if (timeNowFormated.isBetween(blackoutStartTime, blackoutEndTime)) {
-//         logger.debug('Inside blackout period.');
-//         writeRunningScansFile(cb => {
-//             logger.debug('Scan file written');
-//             pauseresumeRunningScans('Pause', action => {
-//                 logger.debug('Pause running scans...');
-//             })
-//         });
-//     } else {
-//         logger.debug('Outside blackout period.');
-//         pauseresumeRunningScans('Resume', action => {
-//             logger.debug('Rusume running scans...');
-//         })
-//     }
 
-// }
+
 
 /**
 *     - Open and read json file created by getRunningDASTScans.
