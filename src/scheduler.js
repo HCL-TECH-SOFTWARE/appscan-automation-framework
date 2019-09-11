@@ -114,22 +114,24 @@ const processScan = function (scanDetails, callback) {
             // pause scan
             logger.debug('Scan is running but scan window has expired - pausing scan, scanExecutionId:  ' + scanExecutionId);
             asoc.pauseOrResumeDASTScan('Pause', scanExecutionId, (data) => {
+                callback();
             });
         } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused' || scanStatus === 'notStarted')) {
             // start scan
             if (scanStatus === 'notStarted') {
                 logger.debug('Inside valid scan window. Scan not previously started. Starting scanId:  ' + scanDetails.scanId);
                 asoc.startDASTScan(scanDetails.scanId, (data) => {
+                    callback();
                 });
             } else {
                 logger.debug('Inside valid scan window. Scan is currently paused. Restarting scanExecutionId:  ' + scanExecutionId);
                 asoc.pauseOrResumeDASTScan('Resume', scanExecutionId, (data) => {
+                    callback();
                 });
             }
         }
     });
 
-    callback();
 }
 
 
