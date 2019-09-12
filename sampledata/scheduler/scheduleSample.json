@@ -1,9 +1,9 @@
 
 {
     "scans": [
-        {"scanID": "0000001", "start_scan_window": "08/29/2019 10:29", "end_scan_window": "08/29/2019 15:30"},
-        {"scanID": "0000002", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
-        {"scanID": "0000003", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
-        {"scanID": "0000004", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"}
+        {"scanId": "0000001", "start_scan_window": "08/29/2019 10:29", "end_scan_window": "08/29/2019 15:30"},
+        {"scanId": "0000002", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
+        {"scanId": "0000003", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
+        {"scanId": "0000004", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"}
     ]
 }

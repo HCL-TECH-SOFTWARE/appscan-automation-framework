@@ -68,7 +68,7 @@ function readJSON() {
   for (let t in schedulerJSON.scans) {
     console.log("SCAN: " + JSON.stringify(schedulerJSON.scans[t]));
     let scanEntry = {
-      scanid: schedulerJSON.scans[t].scanID,
+      scanid: schedulerJSON.scans[t].scanId,
       "start scan": schedulerJSON.scans[t].start_scan_window,
       "end scan": schedulerJSON.scans[t].end_scan_window
     };
@@ -76,6 +76,8 @@ function readJSON() {
   }
 }
 readJSON();
+
+
 </script>
 <style>
 </style>

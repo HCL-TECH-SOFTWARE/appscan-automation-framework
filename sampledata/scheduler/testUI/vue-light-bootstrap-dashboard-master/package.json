@@ -16,6 +16,7 @@
     "bootstrap": "^4.3.1",
     "chartist": "^0.11.0",
     "core-js": "^2.6.9",
+    "file-saver": "^2.0.2",
     "fs": "0.0.1-security",
     "google-maps": "^3.2.1",
     "laravel-vue-datatable": "^0.3.7",
@@ -23,9 +24,12 @@
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.6.6",
     "vue-router": "^3.0.2",
-    "vue2-google-maps": "^0.8.4"
+    "vue2-google-maps": "^0.8.4",
+    "vuetify": "^2.0.17"
   },
   "devDependencies": {
+    "@mdi/font": "^4.4.95",
+    "@mdi/js": "^4.4.95",
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-plugin-eslint": "^3.4.0",
     "@vue/cli-plugin-pwa": "^3.4.0",
