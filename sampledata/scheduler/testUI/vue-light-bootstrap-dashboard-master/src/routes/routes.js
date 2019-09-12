@@ -6,6 +6,7 @@ import NotFound from '../pages/NotFoundPage.vue'
 import Overview from 'src/pages/Overview.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
+import ScheduledScans from 'src/pages/ScheduledScans.vue'
 import Typography from 'src/pages/Typography.vue'
 import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
@@ -37,6 +38,11 @@ const routes = [
         path: 'table-list',
         name: 'Table List',
         component: TableList
+      },
+      {
+        path: 'scheduled-scans',
+        name: 'Scheduled Scans',
+        component: ScheduledScans
       },
       {
         path: 'typography',

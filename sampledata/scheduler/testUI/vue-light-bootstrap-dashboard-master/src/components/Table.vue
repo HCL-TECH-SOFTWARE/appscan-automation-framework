@@ -11,6 +11,9 @@
     <tr v-for="(item, index) in data" :key="index">
       <slot :row="item">
         <td v-for="column in columns" :key="column" v-if="hasValue(item, column)">{{itemValue(item, column)}}</td>
+         <span>
+      <button class="myButton" @click="doSomething(props.row)"></button>
+    </span>
       </slot>
     </tr>
     </tbody>
