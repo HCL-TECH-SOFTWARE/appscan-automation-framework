@@ -25,5 +25,16 @@ module.exports = {
             tags: ['testTag1'],
             contact: 'test contact user 1'
         }
+    },
+    asoc: {
+        application: {
+            name: 'testApp1',
+            description: 'Test description for test application',
+            contact: 'test contact user 1'
+        },
+        assetGroup: {
+            name: 'testAssetGroup1',
+            description: 'Test asset group'
+        }
     }
 }

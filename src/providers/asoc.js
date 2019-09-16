@@ -120,6 +120,11 @@ asoc.getAllUsers = function (callback) {
  */
 asoc.createApplication = function (name, assetGroupId, description, type, development_contact, callback) {
     logger.debug('Creating new application on application security on cloud...');
+    if (name && assetGroupId) {
+        // Contains all the required data
+    } else {
+        return logger.error('Error trying to create application in ASoC.  Application name and asset group ID are rquired...');
+    }
     let createNewApplicationURL = '/Apps';
     let newAppData = {
         Name: name,
@@ -133,7 +138,7 @@ asoc.createApplication = function (name, assetGroupId, description, type, develo
             callback(data);
         })
         .catch((err) => {
-            logger.error('Error trying to create a new application on application security on cloud.  Error: ' + err);
+            logger.error('Error trying to create a new application on application security on cloud.  Error: ' + err.body.Message);
         })
 }
 
