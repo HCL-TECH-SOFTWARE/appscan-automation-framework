@@ -299,6 +299,20 @@ Example:
     $ node scanStop.js -s scanId -a action
 
 
+
+### scheduler
+This module will manage ASoC DAST scan execution according to a date-time window defined in a config file. When the local time falls within the window of the defined scan(s), the scan(s) will be executed (or restarted if paused). When the local time is outside the window for a scan, if running, the scan will be paused. The module must stay running in order for scans to be executed or paused. By default, the scan window(s) in the config are compared against the local time every 30 minutes.
+
+
+#### To use this module
+This module does not accept any parameters, however it requieres ./config/schedule.json. This file can be created using the template ./sampledata/scheduler/scheduleSample.json. The scanId(s) required for the config file can be obtained from the ASoC UI.
+
+Example:
+
+    $ node scheduler.js
+
+
+
 ## Building Your Own Modules
 We highly encourage the creation of new modules.  When creating the new modules, the API integrations for the other services are located in src/provider.  Make sure you import the appropriate provider in your modules to give you access to the APIs.  The list of providers for tools:
 
