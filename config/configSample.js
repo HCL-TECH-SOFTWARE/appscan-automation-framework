@@ -1,16 +1,20 @@
-const setupEnv = require('./setupEnv');
+const path = require('path');
+const frameworkDir = path.resolve(path.join(__dirname, '..'));
+
+
 module.exports = {
+    'frameworkPath': frameworkDir,
+    'frameworkLogsDir': path.resolve(path.join(frameworkDir, 'logs')),
     'saToolLocation': '<LOCATION_OF_THE_SA_CLIENT_TOOL>',
     'ASoCURL': 'https://appscan.ibmcloud.com/api/v2',
     'keyId': '',
     'keySecret': '',
-    'filePath': process.env.ASAF_HOME,
     'ASEURL': 'https://<ASE URL>:<ASE PORT>/ase/api',
     'ASEUserID': '<DOMAIN_NAME>\\<USER_NAME>',
-    'ASEPass': setupEnv.asePass,
+    'ASEKeyId': '',
+    'ASEKeySecret': '',
     'ASEProxyServerURL': 'http://<Proxy Domain>:<Proxy Port (default is 8383)>/automation/',
     'ASEProxyServerDomain': '<Proxy Domain>',
-    'computerPath': process.env.ASAF_HOME,
     'aseProxy': {
         'useProxy': false,
         'hostName': '',
@@ -33,7 +37,6 @@ module.exports = {
     'locOfASEProxyFile': null,
     'serviceAccountDomain': '<DOMAIN_NAME>',
     'serviceAccountUserID': '<USER_NAME>',
-    'serviceAccountPass': setupEnv.serviceAccountPass,
 
 
 
@@ -82,6 +85,6 @@ module.exports = {
     'Loc_of_Current_Scan_report': './current_scans_report/',
 
 
-      // Scheduler
-      'Location_of_schedule_json': '../sampledata/schedule/scheduleSample.JSON'
+    // Scheduler
+    'Location_of_schedule_json': '../sampledata/schedule/scheduleSample.JSON'
 }

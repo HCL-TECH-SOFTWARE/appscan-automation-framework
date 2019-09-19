@@ -83,8 +83,8 @@ function formatDateToString(date) {
 
 var getAllASoCRoles = function (callback) {
     asoc.getAllRoles((roles) => {
-        logger.debug('Roles: ' + JSON.stringify(roles));
-        callback(roles);
+        logger.debug('Roles: ' + JSON.stringify(roles.body));
+        callback(roles.body);
     })
 }
 

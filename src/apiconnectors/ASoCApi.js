@@ -48,11 +48,11 @@ module.exports = {
 
     doGet: function (url) {
         return new Promise((resolve, reject) => {
-            get(url, function (data, err) {
+            get(url, function (err, response) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(data);
+                    resolve(response);
                 }
             })
         })
@@ -65,12 +65,12 @@ module.exports = {
 
     doPost: function (url, body) {
         return new Promise((resolve, reject) => {
-            post(url, body, function (data, err) {
+            post(url, body, function (err, response) {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    resolve(data);
+                    resolve(response);
                 }
             })
         })
@@ -82,12 +82,12 @@ module.exports = {
 
     doPut: function (url, body) {
         return new Promise((resolve, reject) => {
-            put(url, body, function (err, data) {
+            put(url, body, function (err, response) {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    resolve(data);
+                    resolve(response);
                 }
             })
         })
@@ -185,9 +185,9 @@ var get = function (url, callback) {
             rejectUnauthorized: false
         }, function (error, response) {
             if (error) {
-                callback(null, error);
+                callback(error, null);
             } else {
-                callback(response, null);
+                callback(null, response);
             }
         })
     })
@@ -212,7 +212,7 @@ var put = function (url, body, callback) {
                 callback(error, null);
             } else {
                 if (response.statusCode == 201) {
-                    callback(response, null);
+                    callback(null, response);
                 } else {
                     callback(null, response);
                 }

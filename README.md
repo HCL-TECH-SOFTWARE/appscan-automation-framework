@@ -16,25 +16,19 @@ Code is under the [MIT License](LICENSE.txt).
 
         $ npm install
 
-2. Set the ASAF_HOME environment variable to point to the root directory.  For example:
+2. Duplicate the configSample.js file in the config directory.  Then rename it to config.js
 
-	For Bash:      export ASAF_HOME=".../AppScan-Automation-Framework"
+3. Duplicate the aseconfigSample.json file in the config directory.  Then rename it to aseconfig.json
 
-	For Windows:   set ASAF_HOME=...\AppScan-Automation-Framework
+4. Duplicate the serviceAccountConfigSample.json file in the config directory.  Then rename it to serviceAccountConfig.json
 
-3. Duplicate the configSample.js file in the config directory.  Then rename it to config.js
+5. Update the encrypt.js file located in src\providers\ and replace encryptionKey with your own encryption key.****This is important!
 
-4. Duplicate the aseconfigSample.json file in the config directory.  Then rename it to aseconfig.json
+6. Update the fields in the config, to your appropriate settings.  In the config you will see each modules names and then settings that are associated with that specific module.  Those settings will be explained below for each module.
 
-5. Duplicate the serviceAccountConfigSample.json file in the config directory.  Then rename it to serviceAccountConfig.json
+7. Make sure to enter credentials for AppScan Enterprise, which is done by running updateASEPassword.js in the scripts directory.
 
-6. Update the encrypt.js file located in src\providers\ and replace encryptionKey with your own encryption key.****This is important!
-
-7. Update the fields in the config, to your appropriate settings.  In the config you will see each modules names and then settings that are associated with that specific module.  Those settings will be explained below for each module.
-
-8. Make sure to enter credentials for AppScan Enterprise, which is done by running updateASEPassword.js in the scripts directory.
-
-9. If you would like to install the AppScan Enterprise Proxy as a windows service run the startASEProxyAsAService.js script located in the scripts directory.
+8. If you would like to install the AppScan Enterprise Proxy as a windows service run the startASEProxyAsAService.js script located in the scripts directory.
 
 ## Pre-Built Modules
 All the pre-built modules are located in the src directory.  Each module does a certain task and will be explained below.  Make sure the settings in the config.js file are correct and up to date with what you want, then navigate to the root directory of the application.  

@@ -138,25 +138,59 @@ module.exports = {
 // END Exportable functions ------------------------------------
 
 
-// Checks if token is still valid
-var isTokenValid = function (callback) {
-    var checkTokenURL = ASEURL + '/version';
+// Logs into AppScan Enterprise and stores token and session information - Uses user name and password (DEPRECATED)
+// var loginToASE = function (callback) {
+//     if (token.sessionID && moment().unix() < (parseInt(token.timeCreated) + (parseInt(ASETokenRefreshTime) * 60))) {
+//         //token still valid
+//         callback();
+//     } else {
+//         // token not valid
+//         console.log('Logging into AppScan Enterprise...');
+//         var loginURL = ASEURL + '/login'
+//         var loginBody = {
+//             userId: ASEUserID,
+//             password: ASEPass,
+//             featureKey: "AppScanEnterpriseUser"
+//         }
+//         request({
+//             url: loginURL,
+//             method: "POST",
+//             json: true,
+//             body: loginBody,
+//             rejectUnauthorized: false
+//         }, function (error, response, body) {
+//             //console.log('RESPONSE: ' + JSON.stringify(response))
+//             if (response != undefined) {
+//                 token.cookie = response.headers['set-cookie'];
+//                 //console.log('TOKEN: ' + body.sessionId)
+//                 token.sessionID = body.sessionId;
+//                 token.timeCreated = moment().unix();
+//                 callback();
+//             }
+//             else {
+//                 logger.error('Can not connect to AppScan Enterprise Server at host: ' + ASEURL + '.  Make sure you can connect to this host first!');
+//                 if (global.emitErrors) util.emitError(error);
+//             }
+//         })
+//     }
+// }
 
-}
 
-// Logs into AppScan Enterprise and stores token and session information
+// Use API Token to log into ASE
 var loginToASE = function (callback) {
     if (token.sessionID && moment().unix() < (parseInt(token.timeCreated) + (parseInt(ASETokenRefreshTime) * 60))) {
         //token still valid
         callback();
     } else {
+        if (!config.ASEKeyId || !config.ASEKeySecret) {
+            return logger.error('ASE API key ID and/or key secret is missing.  Please add them to config.js (ASEKeyId, ASEKeySecret)');
+        }
         // token not valid
         console.log('Logging into AppScan Enterprise...');
-        var loginURL = ASEURL + '/login'
+        var loginURL = ASEURL + '/keylogin/apikeylogin'
         var loginBody = {
-            userId: ASEUserID,
-            password: ASEPass,
-            featureKey: "AppScanEnterpriseUser"
+            keyId: config.ASEKeyId,
+            keySecret: config.ASEKeySecret
         }
         request({
             url: loginURL,

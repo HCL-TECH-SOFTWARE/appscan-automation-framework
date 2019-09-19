@@ -10,14 +10,8 @@ var asePasswordJson;
 var aseConfigFileLoc;
 var os = process.platform;
 
-//const filePath = config.computerPath;
-const filePath = config.computerPath;
+const filePath = config.frameworkPath;
 //console.log(filePath)
-
-//if (!filePath ) {
-//    err = 'Please set the ASAF_HOME environment variable to the root of the Framework codebase.';
-//    return console.log('ERROR: ' + err);
-//}
 
 if (os === 'win32') {
     aseConfigFileLoc = '\\config\\aseconfig.json'
@@ -36,11 +30,7 @@ checkForFile(aseConfigFileLoc, () => {
     var config = require('../config/config');
     // if windows so /../ otherwise dont
     var os = process.platform;
-    // if (os === 'win32') {
-    //     filePath = config.computerPath + "/../config/aseconfig.json"
-    // } else {
-    //     filePath = config.computerPath + "/config/aseconfig.json"
-    // }
+
     var encryption = require('../src/providers/encrypt');
 
     // Start the prompt
