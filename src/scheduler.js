@@ -95,11 +95,9 @@ const isInScanWindow = function () {
         logger.debug('Processing scan: ' + scanDetails.scanId + ' is scan in windows: ' + scanDetails.isInsideWindow);
 
         asoc.getScanInfo(scanDetails.scanId, scanData => {
-//            console.log(scanData.body);
-            if (scanData.body.Key === 'INVALID_SCAN_IDENTIFIER') {
-                logger.debug('Invalid scanId: ' + scanId);
-                //TODO - this is not catching invalid scan id of "0000003" ???
-                return;
+            if (scanData.body.Key === 'INVALID_SCAN_IDENTIFIER') {  
+                logger.error('Invalid scanId: ' + scanDetails.scanId);
+                callback();
             }
 
             // scanId is valid
