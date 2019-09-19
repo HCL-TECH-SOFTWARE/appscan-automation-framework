@@ -305,7 +305,7 @@ var validateToken = function (callback) {
             logger.error('Error connecting to application security on cloud.  Error: ' + JSON.stringify(error));
         } else {
             if (response) {
-                console.log('ASOC Validate login response: ' + JSON.stringify(response));
+                //console.log('ASOC Validate login response: ' + JSON.stringify(response));
                 // If token is not valid
                 if (response.statusCode === 401) {
                     loginASoC(function () {
