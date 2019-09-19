@@ -1,9 +1,8 @@
 
 {
     "scans": [
-        {"scanId": "0000001", "start_scan_window": "08/29/2019 10:29", "end_scan_window": "08/29/2019 15:30"},
-        {"scanId": "0000002", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
-        {"scanId": "0000003", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
-        {"scanId": "0000004", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"}
+        {"scanId": "420fa37e-1495-42d2-9589-6c90f52a92d2", "start_scan_window": "08/29/2019 10:29", "end_scan_window": "08/29/2019 15:30"},
+        {"scanId": "c6e22133-cdae-47aa-9b72-a44a19214dcd", "start_scan_window": "08/28/2019 15:30", "end_scan_window": "08/28/2019 16:30"},
+        {"scanId": "5351f338-7ce0-4721-88d8-2e1e9d631ece", "start_scan_window": "09/15/2019 00:30", "end_scan_window": "09/15/2019 05:30"}
     ]
 }
