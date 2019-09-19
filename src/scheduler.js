@@ -18,11 +18,11 @@ var d;
 var scheduleJSON;
 
 
-
+// CANNOT DO THIS CHECK HERE...THE PARSED FILE DOESN'T EXIST YET...
 // Check to make sure the schedule JSON exists otherwise fail
-if (!scheduleJSON) {
-    return logger.error('Error location of schedule JSON file does not exist.  Please specify location in config.js file for key Location_of_schedule_json.  Sample of schedule JSON is in sampledata/scheduler/scheduleSample.JSON.');
-}
+//if (!scheduleJSON) {
+//    return logger.error('Error location of schedule JSON file does not exist.  Please specify location in config.js file for key Location_of_schedule_json.  Sample of schedule JSON is in sampledata/scheduler/scheduleSample.JSON.');
+//}
 
 schedule.scheduleJob('0 */30 * * * *', function () {
     d = new Date();
@@ -61,6 +61,12 @@ const isInScanWindow = function () {
     function processNextScan() {
         // Read JSON file
         readFile(scheduleJSONFileLoc, () => {
+            // File has been read by now so do the check here...
+            // Check to make sure the schedule JSON exists otherwise fail
+            if (!scheduleJSON) {
+                return logger.error('Error location of schedule JSON file does not exist.  Please specify location in config.js file for key Location_of_schedule_json.  Sample of schedule JSON is in sampledata/scheduler/scheduleSample.JSON.');
+            }
+
             let scanInfo = { scanId: null, isInsideWindow: false };
             logger.debug('Checking if inside allowed scan window...');
             let scanWindowStart = moment(scheduleJSON.scans[scanListIndex].start_scan_window, timeFormat);
@@ -89,7 +95,7 @@ const isInScanWindow = function () {
         logger.debug('Processing scan: ' + scanDetails.scanId + ' is scan in windows: ' + scanDetails.isInsideWindow);
 
         asoc.getScanInfo(scanDetails.scanId, scanData => {
-            console.log(scanData.body);
+//            console.log(scanData.body);
             if (scanData.body.Key === 'INVALID_SCAN_IDENTIFIER') {
                 logger.debug('Invalid scanId: ' + scanId);
                 //TODO - this is not catching invalid scan id of "0000003" ???
@@ -221,6 +227,7 @@ var writeFile = function (filename, data, callback) {
 
 
 const readFile = function (file, callback) {
+//    logger.debug('file : ' + file);
     fs.readFile(file, 'utf8',
         function (err, contents) {
             if (err) {
@@ -235,7 +242,6 @@ const readFile = function (file, callback) {
             }
         })
 }
-
 
 
 isInScanWindow();
