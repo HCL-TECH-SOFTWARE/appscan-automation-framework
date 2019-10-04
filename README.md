@@ -305,7 +305,7 @@ This module will manage ASoC DAST scan execution according to a date-time window
 
 
 #### To use this module
-This module does not accept any parameters, however it requieres ./config/schedule.json. This file can be created using the template ./sampledata/scheduler/scheduleSample.json. The scanId(s) required for the config file can be obtained from the ASoC UI.
+This module does not accept any parameters, however it requires ./config/schedule.json. This file can be created using the template ./sampledata/scheduler/scheduleSample.json. The field     'Location_of_schedule_json' in ./config/config.js should be set to the specific location of this  file.  The scanId(s) required for the config file can be obtained from the ASoC UI.
 
 Example:
 
