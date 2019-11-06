@@ -8,7 +8,7 @@ const config = require('../config/config');
 const logger = require('../config/logger');
 const asoc = require('./providers/asoc');
 const fs = require('fs');
-const scheduleJSONFileLoc = config.frameworkPath + config.Location_of_schedule_json;
+const scheduleJSONFileLoc = config.Location_of_schedule_json;
 
 
 var defaultScanWrkFile = config.Location_of_scan_temp_file;
