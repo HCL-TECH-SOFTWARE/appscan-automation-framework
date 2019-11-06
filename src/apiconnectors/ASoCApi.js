@@ -10,6 +10,7 @@ var fs = require('fs');
 var url = require("url"),
     http = require("http"),
     env = process.env;
+var moment = require('moment');
 
 var proxy = {
     protocol: "http:",
@@ -28,6 +29,10 @@ const useProxy = config.asocProxy.useProxy;
 const ASoC_API_URL = config.ASoCURL;
 const keyId = config.keyId;
 const keySecret = config.keySecret;
+var ASoCSession = {
+    token: null,
+    timeCreated: null
+}
 var token;
 
 
@@ -103,6 +108,7 @@ module.exports = {
 
 
 var loginASoC = function (callback) {
+    // token not valid
     if (useProxy) {
         proxyRequests();
     }
@@ -121,8 +127,10 @@ var loginASoC = function (callback) {
     }, function (error, response, body) {
         //console.log('RESPONSE: ' + JSON.stringify(response))
         if (response != undefined) {
-            token = body.Token;
-            callback();
+            setASoCSession(body.Token, () => {
+                token = body.Token;
+                callback();
+            })
         }
         else {
             logger.error('Can not connect to Application Security on cloud at host: ' + ASoC_API_URL + '.  Make sure you can connect to this host first!');
@@ -137,7 +145,7 @@ var loginASoC = function (callback) {
 var post = function (url, body, callback) {
     validateToken(function () {
         let requestURL = ASoC_API_URL + url;
-        token = 'Bearer ' + token;
+        token = 'Bearer ' + ASoCSession.token;
         request({
             headers: {
                 Authorization: token
@@ -166,7 +174,7 @@ var post = function (url, body, callback) {
 var get = function (url, callback) {
     validateToken(function () {
         let requestURL = ASoC_API_URL + url;
-        token = 'Bearer ' + token;
+        token = 'Bearer ' + ASoCSession.token;
         request({
             headers: {
                 Authorization: token
@@ -189,7 +197,7 @@ var get = function (url, callback) {
 var put = function (url, body, callback) {
     validateToken(function () {
         let requestURL = ASoC_API_URL + url;
-        token = 'Bearer ' + token;
+        token = 'Bearer ' + ASoCSession.token;
         request({
             headers: {
                 Authorization: token
@@ -218,7 +226,7 @@ var put = function (url, body, callback) {
 var downloadFile = function (filenamed, url, callback) {
     validateToken(function () {
         let requestURL = ASoC_API_URL + url;
-        token = 'Bearer ' + token;
+        token = 'Bearer ' + ASoCSession.token;
         var fileName = config.locOfXML + filenamed + '.xml';
         console.log('FILE LOC: ' + fileName)
         request({
@@ -286,7 +294,7 @@ var validateToken = function (callback) {
     let requestURL = ASoC_API_URL + '/Apps/Count';
     request({
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + ASoCSession.token
         },
         url: requestURL,
         method: "GET",
@@ -297,6 +305,7 @@ var validateToken = function (callback) {
             logger.error('Error connecting to application security on cloud.  Error: ' + JSON.stringify(error));
         } else {
             if (response) {
+                //console.log('ASOC Validate login response: ' + JSON.stringify(response));
                 // If token is not valid
                 if (response.statusCode === 401) {
                     loginASoC(function () {
@@ -311,4 +320,11 @@ var validateToken = function (callback) {
             }
         }
     })
+}
+
+
+const setASoCSession = function (token, callback) {
+    ASoCSession.token = token;
+    ASoCSession.timeCreated = moment().unix();
+    callback();
 }

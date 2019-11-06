@@ -38,7 +38,7 @@ asoc.getScanInfo = function (scanID, callback) {
  * Get Application Id
  */
 asoc.getAppId = function (name, callback) {
-    let query = querystring.stringify({filter: 'Name eq ' + '\'' + name + '\''})
+    let query = querystring.stringify({ filter: 'Name eq ' + '\'' + name + '\'' })
     let AppURL = '/Apps?$' + query;
     //console.log('AppURL: ' + AppURL);
     asocapi.doGet(AppURL)
@@ -120,6 +120,11 @@ asoc.getAllUsers = function (callback) {
  */
 asoc.createApplication = function (name, assetGroupId, description, type, development_contact, callback) {
     logger.debug('Creating new application on application security on cloud...');
+    if (name && assetGroupId) {
+        // Contains all the required data
+    } else {
+        return logger.error('Error trying to create application in ASoC.  Application name and asset group ID are rquired...');
+    }
     let createNewApplicationURL = '/Apps';
     let newAppData = {
         Name: name,
@@ -133,7 +138,7 @@ asoc.createApplication = function (name, assetGroupId, description, type, develo
             callback(data);
         })
         .catch((err) => {
-            logger.error('Error trying to create a new application on application security on cloud.  Error: ' + err);
+            logger.error('Error trying to create a new application on application security on cloud.  Error: ' + err.body.Message);
         })
 }
 
@@ -242,3 +247,65 @@ asoc.updateUser = function (userID, assetGroupArray, roleID, callback) {
         })
 }
 
+
+/**
+ * Get running DAST scans
+ */
+asoc.getRunningDASTScans = function (callback) {
+    logger.debug('Getting running DAST scans info from application security on cloud...');
+    let filter = "((Technology%20eq%20'DynamicAnalyzer'))%20and%20((LatestExecution%2FStatus%20eq%20'Running'))"
+    let getScansURL = '/Scans?' + '$filter=' + filter;
+    asocapi.doGet(getScansURL)
+        .then((scanData) => {
+            //console.log(scanData);
+            let scanObj = JSON.parse(JSON.stringify(scanData.body));
+            let runningScanExecIds = [];
+            for (i = 0; i < scanObj.length; i++) {
+                runningScanExecIds.push(scanObj[i]['LatestExecution']['Id'])
+            }
+            callback(runningScanExecIds);
+        })
+        .catch((err) => {
+            logger.error('Error trying to get running DAST Scan info from application security on cloud.  Error: ' + err);
+        })
+}
+
+
+/**
+ * Pause or resume a DAST scan
+ * @param {*} operation - Pause, Resume
+ * @param {*} executionId - ExecutionId of the scan
+ */
+asoc.pauseOrResumeDASTScan = function (operation, executionId, callback) {
+    let prScanURL = '/Scans/Execution/' + executionId + '/' + operation;
+    var allowedOperations = ['Pause', 'Resume'];
+    if (allowedOperations.includes(operation)) {
+        asocapi.doPut(prScanURL, null)
+            .then((scanData) => {
+                callback(scanData);
+            })
+            .catch((err) => {
+                logger.error('Error trying to ' + operation + ' DAST Scan from application security on cloud.  Error: ' + err);
+            })
+    } else {
+        return logger.error('Error trying to pause or resume scan.  Invalid operation parameter, parameter must be: Pause or Resume');
+    }
+}
+
+
+/**
+ * Starts DAST scan on ASoC that has not been started before
+ * @param {*} scanId - ScanId of the scan that you are trying to start
+ */
+asoc.startDASTScan = function (scanId, callback) {
+    let startDASTScanURL = '/Scans/' + scanId + '/Executions';
+    let body = {};
+
+    asocapi.doPost(startDASTScanURL, body)
+    .then((scanData) => {
+        callback(scanData);
+    })
+    .catch((err) => {
+        logger.error('Error trying to start DAST scan from application security on cloud.  Error: ' + err);
+    })
+}
