@@ -1321,9 +1321,9 @@ ase.getReportStatus = function (reportID, callback) {
  * @param {*} folderItemID - folder Item ID of a specfic DAST scan job
  */
 
-ase.getReport = function (reportID, callback) {
+ase.getReport = function (reportId, callback) {
     logger.debug('Downloading report...');
-    let getReportURL = '/issues/reports/' + reportID;
+    let getReportURL = '/issues/reports/' + reportId;
     /*
     let header = {
         Accept: 'application/octet-stream'

@@ -309,7 +309,8 @@ var download = function (url, callback, header) {
                 if (res.statusCode == 200) {
                     // extract filename
                     //et filename = regexp.exec(res.headers['content-disposition'])[1];
-                    let filename = 'AppScanReportOutput.zip';
+                    
+                    let filename = 'AppScanReportOutput-'+ Date.now() + '.zip';
                     //console.log('filename' + filename);
 
                     // create file write stream
