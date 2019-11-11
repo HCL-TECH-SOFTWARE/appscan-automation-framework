@@ -1,6 +1,6 @@
 # AppScan Automation Framework
 
-This framework makes it simple to interact with the APIs for IBM AppScan Enterprise and IBM Application Security on Cloud which can be used to automate tasks.  This framework also contains pre-built modules that perform certain tasks that will be explained below.
+This framework makes it simple to interact with the APIs for HCL AppScan Enterprise and HCL AppScan on Cloud which can be used to automate tasks.  This framework also contains pre-built modules that perform certain tasks that will be explained below.
 
 ## Contributing
 We would love to have you contribute to the AppScan Automation Framework.  First, please review our [Contribution Guide](CONTRIBUTING.md).
@@ -18,17 +18,11 @@ Code is under the [MIT License](LICENSE.txt).
 
 2. Duplicate the configSample.js file in the config directory.  Then rename it to config.js
 
-3. Duplicate the aseconfigSample.json file in the config directory.  Then rename it to aseconfig.json
+3. Update the fields in the config, to your appropriate settings.  In the config you will see each modules names and then settings that are associated with that specific module.  Those settings will be explained below for each module.
 
-4. Duplicate the serviceAccountConfigSample.json file in the config directory.  Then rename it to serviceAccountConfig.json
+4. Make sure to enter ASEURL, keyId, and KeySecret for AppScan Enterprise and/or AppScan on Cloud, which is done in the config.js.
 
-5. Update the encrypt.js file located in src\providers\ and replace encryptionKey with your own encryption key.****This is important!
-
-6. Update the fields in the config, to your appropriate settings.  In the config you will see each modules names and then settings that are associated with that specific module.  Those settings will be explained below for each module.
-
-7. Make sure to enter credentials for AppScan Enterprise, which is done by running updateASEPassword.js in the scripts directory.
-
-8. If you would like to install the AppScan Enterprise Proxy as a windows service run the startASEProxyAsAService.js script located in the scripts directory.
+5. If you would like to install the AppScan Enterprise Proxy as a windows service run the startASEProxyAsAService.js script located in the scripts directory but make sure to update the encrypt.js file located in src\providers\ and replace encryptionKey with your own encryption key.****This is important!
 
 ## Pre-Built Modules
 All the pre-built modules are located in the src directory.  Each module does a certain task and will be explained below.  Make sure the settings in the config.js file are correct and up to date with what you want, then navigate to the root directory of the application.  
