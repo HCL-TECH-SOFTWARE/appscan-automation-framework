@@ -60,11 +60,6 @@ module.exports = {
         })
     },
 
-
-
-
-
-
     doPost: function (url, body, header) {
         return new Promise((resolve, reject) => {
             post(url, body, function (err, response) {
@@ -91,7 +86,6 @@ module.exports = {
         })
     },
 
-
     doDelete: function (url, body, header) {
         return new Promise((resolve, reject) => {
             del(url, body, function (err, response) {
@@ -104,7 +98,6 @@ module.exports = {
             }, header)
         })
     },
-
 
     doPut: function (url, body) {
         return new Promise((resolve, reject) => {
@@ -119,6 +112,18 @@ module.exports = {
         })
     },
 
+    doDownload: function (url) {
+        return new Promise((resolve, reject) => {
+            download(url, function (err, data) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(data);
+                }
+            })
+        })
+    },
 
     doUpload: function (url, body, fileLoc) {
         return new Promise((resolve, reject) => {
@@ -260,7 +265,74 @@ var get = function (url, callback, header) {
     })
 }
 
+var download = function (url, callback, header) {
+    //let regexp = /filename=\"(.*)\"/gi;
+    let locOfProxyTraffic = './tmp/';
+    loginToASE(function () {
+        let requestURL = ASEURL + url
+        //let requestURL = url
+        let headerInfo = {
+            headers: {
+                Cookie: token.cookie,
+                asc_xsrf_token: token.sessionID,
+                Accept: "application/octet-stream",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Accept-Encoding": "gzip, deflate"
+            }
+        }
+        if (header) {
+            if (header.range) {
+                headerInfo.headers['Range'] = header.range;
+            }
+            if (header.Accept) {
+                headerInfo.headers.Accept = header.Accept;
+            }
+        }
+        request({
+            headers: headerInfo.headers,
+            url: requestURL,
+            method: "GET",
+            json: true,   // <--Very important!!!
+            rejectUnauthorized: false,
+            encoding: null
+        })
+            .on('response', function (res) {
+                console.log('response' + JSON.stringify(res));
+                if (res.statusCode == 401) {
+                    logger.error('Error trying to call ASE, ' + response.body.errorMessage);
+                }
+                /*
+                if (res.headers.location == '/ase/LicenseWarning.aspx') {
+                    logger.error('Error your AppScan Enterprise license is expiring soon warning.  You must extend your license to resolve this know issue with certain API endpoints.  (Legacy API)');
+                }
+                */
+                if (res.statusCode == 200) {
+                    // extract filename
+                    //et filename = regexp.exec(res.headers['content-disposition'])[1];
+                    
+                    let filename = 'AppScanReportOutput-'+ Date.now() + '.zip';
+                    //console.log('filename' + filename);
 
+                    // create file write stream
+                    let fws = fs.createWriteStream(locOfProxyTraffic + filename);
+
+                    // setup piping of data
+                    res.pipe(fws);
+
+                    res.on('end', () => {
+                        callback(null, {
+                            success: true,
+                            location: locOfProxyTraffic + filename
+                        })
+                    })
+                }
+            })
+            .on('error', function (err) {
+                console.log('response' + JSON.stringify(err));
+                callback(err,null);
+            })
+    })
+}
 
 
 

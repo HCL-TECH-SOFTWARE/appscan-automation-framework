@@ -34,7 +34,7 @@
          }),
  
          new (require('winston-daily-rotate-file'))({
-             filename: `${logDir}/-Application.log`,
+             filename: `${logDir}/Application.log`,
              timestamp: tsFormat,
              datePattern: 'YYYY-MM-DD',
              prepend: true,

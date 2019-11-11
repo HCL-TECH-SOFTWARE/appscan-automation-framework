@@ -214,7 +214,8 @@ var generateASEUserReportData = function (userTypes, callback) {
                     LAST_DATE_ACCOUNT_MODIFIED: null,
                     LAST_PASSWORD_CHANGE_DATE: null,
                     FULL_USER_NAME: userTypes[asetypes].userName,
-                    NT_ID: null
+                    NT_ID: null,
+                    USER_TYPE: userTypes[asetypes].userTypeId
                 }
                 if (userTypes[asetypes].email) {
                     auditEntry.EMAIL = userTypes[asetypes].email;
@@ -304,6 +305,7 @@ var generateASEUserProfileReportData = function (userTypes, callback) {
                 //application_name: 'AppScan Enterprise',
                 // Text is HTML coded and converting it to string
                 PROFILE_NAME: he.decode(userTypes[asetypes].name),
+                PROFILE_ID: userTypes[asetypes].id,
                 // Removes any special characters
                 //udam: he.decode(userTypes[asetypes].name),
                 //active_with_users: 'No',
