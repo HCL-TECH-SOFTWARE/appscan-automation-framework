@@ -1,6 +1,6 @@
 # AppScan Automation Framework
 
-This framework makes it simple to interact with the APIs for IBM AppScan Enterprise and IBM Application Security on Cloud which can be used to automate tasks.  This framework also contains pre-built modules that perform certain tasks that will be explained below.
+This framework makes it simple to interact with the APIs for HCL AppScan Enterprise and HCL AppScan on Cloud which can be used to automate tasks.  This framework also contains pre-built modules that perform certain tasks that will be explained below.
 
 ## Contributing
 We would love to have you contribute to the AppScan Automation Framework.  First, please review our [Contribution Guide](CONTRIBUTING.md).
@@ -18,17 +18,11 @@ Code is under the [MIT License](LICENSE.txt).
 
 2. Duplicate the configSample.js file in the config directory.  Then rename it to config.js
 
-3. Duplicate the aseconfigSample.json file in the config directory.  Then rename it to aseconfig.json
+3. Update the fields in the config, to your appropriate settings.  In the config you will see each modules names and then settings that are associated with that specific module.  Those settings will be explained below for each module.
 
-4. Duplicate the serviceAccountConfigSample.json file in the config directory.  Then rename it to serviceAccountConfig.json
+4. Make sure to enter ASEURL, keyId, and KeySecret for AppScan Enterprise and/or AppScan on Cloud, which is done in the config.js.
 
-5. Update the encrypt.js file located in src\providers\ and replace encryptionKey with your own encryption key.****This is important!
-
-6. Update the fields in the config, to your appropriate settings.  In the config you will see each modules names and then settings that are associated with that specific module.  Those settings will be explained below for each module.
-
-7. Make sure to enter credentials for AppScan Enterprise, which is done by running updateASEPassword.js in the scripts directory.
-
-8. If you would like to install the AppScan Enterprise Proxy as a windows service run the startASEProxyAsAService.js script located in the scripts directory.
+5. If you would like to install the AppScan Enterprise Proxy as a windows service run the startASEProxyAsAService.js script located in the scripts directory but make sure to update the encrypt.js file located in src\providers\ and replace encryptionKey with your own encryption key.****This is important!
 
 ## Pre-Built Modules
 All the pre-built modules are located in the src directory.  Each module does a certain task and will be explained below.  Make sure the settings in the config.js file are correct and up to date with what you want, then navigate to the root directory of the application.  
@@ -79,7 +73,7 @@ This module does not take in any parameters.
     $ node src/auditReport.js
 
 ### DASTAutomation
-This module will help get you up and running with Dynamic Application Security Testing (DAST) very quickly.  This module leverages your current functional test to use that traffic to run DAST.  We have supplied a sample functional test, selenium java jar application, in the sampledata/DASTAutomation_Example_Data directory.  You will also need to have the AppScan Proxy Server runnng and the information set in the config.js file.  The [AppScan Proxy Server is located here](Extras/AppScan_Proxy_Server/DastProxyServerStandalone.1.1.403.zip). This module will check to see if the AppScan Proxy server is up and running, then create a new listener on the proxy server, execute the functional test and configure it to run on the new proxy server listener, once the functional test is complete it will stop the proxy server, download the traffic from the proxy server, check if there is a scan that already exists with the name and if not create a new scan on AppScan Enterprise, update the job with the traffic file, and start the scan.  The template ID, test policy ID, folder ID, and job name do not have to be passed and if it is not it will pull the defaults that you configured in the config.js file but these can be overridden with the -t, -p, -d, -a, and -n flags respectively.  
+This module will help get you up and running with Dynamic Application Security Testing (DAST) very quickly.  This module leverages your current functional test to use that traffic to run DAST.  We have supplied a sample functional test, selenium java jar application, in the sampledata/DASTAutomation_Example_Data directory.  You will also need to have the AppScan Proxy Server runnng and the information set in the config.js file.  The AppScan Proxy Server is packaged with AppScan Enterprise in Version 9.0.3.13+.  To find the install files, navigate to the installation location of AppScan Enterprise.  Then naviate to WebApp directory, then into the downloads folder.  The name of the package is AppScanProxyServer.zip (This is typically the location: C:\Program Files (x86)\IBM\AppScan Enterprise\WebApp\downloads). This module will check to see if the AppScan Proxy server is up and running, then create a new listener on the proxy server, execute the functional test and configure it to run on the new proxy server listener, once the functional test is complete it will stop the proxy server, download the traffic from the proxy server, check if there is a scan that already exists with the name and if not create a new scan on AppScan Enterprise, update the job with the traffic file, and start the scan.  The template ID, test policy ID, folder ID, and job name do not have to be passed and if it is not it will pull the defaults that you configured in the config.js file but these can be overridden with the -t, -p, -d, -a, and -n flags respectively.  
 
 
     defaultTemplateID - This is the default template Id used to run scans.  This can be overridden by the template ID sent in the command with the -t flag.
