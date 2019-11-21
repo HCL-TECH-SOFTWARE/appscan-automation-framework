@@ -30,8 +30,8 @@ Example pre-built modules are described [here](docs/modules.md)
 ## Building Your Own Modules
 We highly encourage the creation of new modules.  When creating the new modules, the API integrations for the other services are located in src/provider.  Make sure you import the appropriate provider in your modules to give you access to the APIs.  The list of providers for tools:
 
-    IBM Application Security on cloud: ./provider/asoc
-    IBM AppScan Enterprise: ./provider/ase
+    HCL Application Security on cloud: ./provider/asoc
+    HCL AppScan Enterprise: ./provider/ase
     AppScan Enterprise Proxy Server: ./provider/aseProxyServer
 
 If you would like to contribute a new module please submit a pull request, so we can review it and add it to the project.  If you would like to submit an enhancement for a new feature, please open up a new issue with the project with the details of the enhancement.
