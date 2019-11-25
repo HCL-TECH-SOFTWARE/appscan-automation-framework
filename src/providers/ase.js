@@ -1205,7 +1205,7 @@ ase.updateJobScant = function (jobId, startingUrl, loginUsername, loginPassword,
 /**
  * Generate Security Report
  */
-ase.appSecurityReport = function (appId, fileFormat, minSeverity, callback) {
+ase.appSecurityReport = function (appId, fileFormat, minSeverity, fullJson, callback) {
 
     var results = {};
 
@@ -1258,6 +1258,10 @@ ase.appSecurityReport = function (appId, fileFormat, minSeverity, callback) {
         issueIdsAndQueries: severity
     };
 
+    if (fullJson) {
+        createReportBody = fullJson;
+    }
+
     aseapi.doPost(createReportURL, createReportBody)
         .then((data) => {
 
@@ -1285,7 +1289,6 @@ ase.appSecurityReport = function (appId, fileFormat, minSeverity, callback) {
             if (global.emitErrors) util.emitError(err);
         })
 }
-
 
 
 /**
@@ -1321,7 +1324,7 @@ ase.getReportStatus = function (reportID, callback) {
  * @param {*} folderItemID - folder Item ID of a specfic DAST scan job
  */
 
-ase.getReport = function (reportId, callback) {
+ase.getReport = function (reportId, targetSubDir, callback) {
     logger.debug('Downloading report...');
     let getReportURL = '/issues/reports/' + reportId;
     /*
@@ -1329,7 +1332,7 @@ ase.getReport = function (reportId, callback) {
         Accept: 'application/octet-stream'
     }
     */
-    aseapi.doDownload(getReportURL)
+    aseapi.doDownload(getReportURL, targetSubDir)
         .then((data) => {
 
             if (data.success) {
