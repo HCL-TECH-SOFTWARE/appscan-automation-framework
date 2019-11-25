@@ -269,7 +269,10 @@ const sanitize = require("sanitize-filename");
 var download = function (url, targetSubDir, callback, header) {
     //TODO update tmpFolderLoc to be defined in config
     let tmpFolderLoc = './tmp/';
-    let downloadPath = path.join(tmpFolderLoc, sanitize(targetSubDir));
+    let downloadPath = tmpFolderLoc;
+    if (targetSubDir) {
+        downloadPath = path.join(tmpFolderLoc, sanitize(targetSubDir));
+    }
 
     loginToASE(function () {
         let requestURL = ASEURL + url
