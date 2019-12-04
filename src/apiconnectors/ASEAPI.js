@@ -204,7 +204,8 @@ var loginToASE = function (callback) {
             body: loginBody,
             rejectUnauthorized: false
         }, function (error, response, body) {
-            //console.log('RESPONSE: ' + JSON.stringify(response))
+            // console.log('RESPONSE: ' + JSON.stringify(response))
+            // console.log('RESPONSE ERROR: ' + JSON.stringify(error))
             if (response != undefined) {
                 token.cookie = response.headers['set-cookie'];
                 //console.log('TOKEN: ' + body.sessionId)
