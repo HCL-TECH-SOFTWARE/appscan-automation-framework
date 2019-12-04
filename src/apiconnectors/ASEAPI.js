@@ -112,9 +112,9 @@ module.exports = {
         })
     },
 
-    doDownload: function (url) {
+    doDownload: function (url, targetSubDir) {
         return new Promise((resolve, reject) => {
-            download(url, function (err, data) {
+            download(url, targetSubDir, function (err, data) {
                 if (err) {
                     reject(err);
                 }
@@ -266,9 +266,15 @@ var get = function (url, callback, header) {
     })
 }
 
-var download = function (url, callback, header) {
-    //let regexp = /filename=\"(.*)\"/gi;
-    let locOfProxyTraffic = './tmp/';
+const sanitize = require("sanitize-filename");
+var download = function (url, targetSubDir, callback, header) {
+    //TODO update tmpFolderLoc to be defined in config
+    let tmpFolderLoc = './tmp/';
+    let downloadPath = tmpFolderLoc;
+    if (targetSubDir) {
+        downloadPath = path.join(tmpFolderLoc, sanitize(targetSubDir));
+    }
+
     loginToASE(function () {
         let requestURL = ASEURL + url
         //let requestURL = url
@@ -315,7 +321,7 @@ var download = function (url, callback, header) {
                     //console.log('filename' + filename);
 
                     // create file write stream
-                    let fws = fs.createWriteStream(locOfProxyTraffic + filename);
+                    let fws = fs.createWriteStream(path.join(downloadPath, filename));
 
                     // setup piping of data
                     res.pipe(fws);
@@ -323,7 +329,7 @@ var download = function (url, callback, header) {
                     res.on('end', () => {
                         callback(null, {
                             success: true,
-                            location: locOfProxyTraffic + filename
+                            location: path.join(downloadPath, filename)
                         })
                     })
                 }
