@@ -249,7 +249,7 @@ var get = function (url, callback, header) {
             method: "GET",
             json: true,   // <--Very important!!!
             rejectUnauthorized: false,
-            encoding: null
+            //encoding: null *was commented out because of issue ID: #40
         }, function (error, response) {
             if (error) {
                 callback(error, null);
