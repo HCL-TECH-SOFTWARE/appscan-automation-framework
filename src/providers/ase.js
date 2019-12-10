@@ -760,7 +760,8 @@ ase.getTestPolicies = function (callback) {
     logger.debug('Getting all test policies in AppScan Enterprise...');
     let getTestPoliciesURL = '/testpolicies/all';
     let header = {
-        Accept: 'application/xml'
+        Accept: 'application/xml',
+        'Accept-Encoding': 'gzip, deflate'
     }
 
     aseapi.doGet(getTestPoliciesURL, header)

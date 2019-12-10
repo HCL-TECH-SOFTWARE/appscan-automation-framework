@@ -204,7 +204,8 @@ var loginToASE = function (callback) {
             body: loginBody,
             rejectUnauthorized: false
         }, function (error, response, body) {
-            //console.log('RESPONSE: ' + JSON.stringify(response))
+            // console.log('RESPONSE: ' + JSON.stringify(response))
+            // console.log('RESPONSE ERROR: ' + JSON.stringify(error))
             if (response != undefined) {
                 token.cookie = response.headers['set-cookie'];
                 //console.log('TOKEN: ' + body.sessionId)
@@ -248,7 +249,7 @@ var get = function (url, callback, header) {
             method: "GET",
             json: true,   // <--Very important!!!
             rejectUnauthorized: false,
-            encoding: null
+            //encoding: null *was commented out because of issue ID: #40
         }, function (error, response) {
             if (error) {
                 callback(error, null);

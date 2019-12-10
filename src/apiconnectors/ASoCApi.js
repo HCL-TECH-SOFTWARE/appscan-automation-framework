@@ -157,10 +157,10 @@ var post = function (url, body, callback) {
             rejectUnauthorized: false
         }, function (error, response) {
             if (error) {
-                callback(null, error);
+                callback(error, null);
             } else {
                 if (response.statusCode == 201) {
-                    callback(response, null);
+                    callback(null, response);
                 } else {
                     callback(null, response);
                 }
