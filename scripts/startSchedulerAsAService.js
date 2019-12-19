@@ -65,7 +65,7 @@ aseService.on('uninstall', function () {
 if (unistallService) {
     aseService.uninstall();
 } else {
-    service.isAdminUser(function (isAdmin) {
+    aseService.isAdminUser(function (isAdmin) {
         if (isAdmin) {
             aseService.install();
         } else {
