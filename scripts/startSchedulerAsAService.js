@@ -65,11 +65,11 @@ aseService.on('uninstall', function () {
 if (unistallService) {
     aseService.uninstall();
 } else {
-    aseService.isAdminUser(function (isAdmin) {
-        if (isAdmin) {
+/*     service.isAdminUser(function (isAdmin) {
+        if (isAdmin) { */
             aseService.install();
-        } else {
+/*         } else {
             console.log('User is not a admin, user must have admin privileges to install this service...');
         }
-    })
+    }) */
 }
