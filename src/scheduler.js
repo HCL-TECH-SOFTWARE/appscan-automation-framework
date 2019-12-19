@@ -126,9 +126,8 @@ const isInScanWindow = function () {
                     if (data.statusCode == 200) { 
                         logger.debug('Successfully paused scan'); 
                     } else { 
-                        logger.error('Error pausing scan on ASoC.  Error: ' + JSON.stringify(data)); 
+                        logger.error('Error pausing scan on ASoC.  Error: ' + data.body); 
                     }
-                    logger.verbose('Pausing scan on asoc response: ' + JSON.stringify(data));
                     callback();
                 });
             } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused' || scanStatus === 'notStarted')) {
@@ -139,9 +138,8 @@ const isInScanWindow = function () {
                         if (data.statusCode == 200) {
                             logger.debug('Successfully started scan');
                         } else {
-                            logger.error('Error starting scan on ASoC.  Error: ' + JSON.stringify(data));
+                            logger.error('Error starting scan on ASoC.  Error: ' + data.body);
                         }
-                        logger.verbose('Starting scan on asoc response: ' + JSON.stringify(data));
                         callback();
                     });
                 } else {
@@ -150,9 +148,8 @@ const isInScanWindow = function () {
                         if (data.statusCode == 200) {
                             logger.debug('Successfully resumed scan');
                         } else {
-                            logger.error('Error resuming scan on ASoC.  Error: ' + JSON.stringify(data));
+                            logger.error('Error resuming scan on ASoC.  Error: ' + data.body);
                         }
-                        logger.verbose('resume scan on asoc response: ' + JSON.stringify(data));
                         callback();
                     });
                 }
