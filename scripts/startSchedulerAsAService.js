@@ -5,7 +5,7 @@
  */
 var service = require('node-windows').Service;
 const config = require('../config/config');
-const locOfASEProxyFile = config.frameworkPath+"/src/scheduler.js";
+const locOfASEProxyFile = config.frameworkPath+"../src/scheduler.js";
 const logger = require('../config/logger');
 var unistallService = false;
 var encryption = require('../src/providers/encrypt');
