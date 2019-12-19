@@ -86,5 +86,6 @@ module.exports = {
 
 
     // Scheduler
-    'Location_of_schedule_json': '../sampledata/schedule/scheduleSample.JSON'
+    'Location_of_schedule_json': '../sampledata/schedule/scheduleSample.JSON',
+        'Location_of_schedulerJS_file': ''
 }
