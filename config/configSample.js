@@ -6,7 +6,7 @@ module.exports = {
     'frameworkPath': frameworkDir,
     'frameworkLogsDir': path.resolve(path.join(frameworkDir, 'logs')),
     'saToolLocation': '<LOCATION_OF_THE_SA_CLIENT_TOOL>',
-    'ASoCURL': 'https://appscan.ibmcloud.com/api/v2',
+    'ASoCURL': 'https://cloud.appscan.com/api/v2',
     'keyId': '',
     'keySecret': '',
     'ASEURL': 'https://<ASE URL>:<ASE PORT>/ase/api',

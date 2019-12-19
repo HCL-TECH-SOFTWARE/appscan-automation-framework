@@ -63,6 +63,24 @@ ase.getSpecificApp = function (appID, callback) {
 }
 
 /**
+ * Get an ASM application scans
+ */
+ase.getApplicationScans = function (appID, callback) {
+    let getAppURL = '/applications/' + appID + '/scans'
+
+    aseapi.doGet(getAppURL)
+        .then((data) => {
+            callback(data);
+        })
+        .catch((err) => {
+            logger.error('Error trying to get application scans from AppScan Enterprise.  Error: ' + err);
+            if (global.emitErrors) util.emitError(err);
+        })
+}
+
+
+
+/**
  * Get current running and pending scan jobs from ASE
  */
 ase.getRunningScanJobs = function (callback) {
@@ -742,7 +760,8 @@ ase.getTestPolicies = function (callback) {
     logger.debug('Getting all test policies in AppScan Enterprise...');
     let getTestPoliciesURL = '/testpolicies/all';
     let header = {
-        Accept: 'application/xml'
+        Accept: 'application/xml',
+        'Accept-Encoding': 'gzip, deflate'
     }
 
     aseapi.doGet(getTestPoliciesURL, header)
@@ -1187,7 +1206,7 @@ ase.updateJobScant = function (jobId, startingUrl, loginUsername, loginPassword,
 /**
  * Generate Security Report
  */
-ase.appSecurityReport = function (appId, fileFormat, minSeverity, callback) {
+ase.appSecurityReport = function (appId, fileFormat, minSeverity, fullJson, callback) {
 
     var results = {};
 
@@ -1240,6 +1259,10 @@ ase.appSecurityReport = function (appId, fileFormat, minSeverity, callback) {
         issueIdsAndQueries: severity
     };
 
+    if (fullJson) {
+        createReportBody = fullJson;
+    }
+
     aseapi.doPost(createReportURL, createReportBody)
         .then((data) => {
 
@@ -1269,7 +1292,6 @@ ase.appSecurityReport = function (appId, fileFormat, minSeverity, callback) {
 }
 
 
-
 /**
  * Gets security Report Status
  * (If it has already generated or not)
@@ -1297,35 +1319,38 @@ ase.getReportStatus = function (reportID, callback) {
 
 
 /**
- * Gets security Report Status
- * (If it has already generated or not)
+ * Get security Report
+ * 
  * 
  * @param {*} folderItemID - folder Item ID of a specfic DAST scan job
  */
 
-ase.getReport = function (reportID, path, filename, callback) {
+ase.getReport = function (reportId, targetSubDir, callback) {
     logger.debug('Downloading report...');
-    let getReportURL = '/issues/reports/' + reportID;
+    let getReportURL = '/issues/reports/' + reportId;
+    /*
     let header = {
         Accept: 'application/octet-stream'
     }
-
-    aseapi.doDownloadGet(getReportURL, path, filename, header)
+    */
+    aseapi.doDownload(getReportURL, targetSubDir)
         .then((data) => {
 
-            console.log('we should have a zip file now');
-
-            var responseCode = data.req.res.statusCode;
-            var responseHeader = data.caseless.dict;
-
-
-            callback(data);
-            return;
+            if (data.success) {
+                callback({
+                    success: true,
+                    location: data.location
+                })
+            } else {
+                logger.error('Error trying to download report from AppScan Enterprise, ' + data.msg);
+                callback({
+                    success: false,
+                    msg: data.msg
+                })
+            }
         })
         .catch((err) => {
-            logger.error('Error trying to get Security Report, ' + err);
-            if (global.emitErrors) util.emitError(err);
-            // callback(null);
+            logger.error('Error trying to download report, ' + JSON.stringify(err));
         })
 }
 
@@ -1383,3 +1408,6 @@ function formatDateToString() {
     // create the format you want
     return (yyyy + '-' + MM + '-' + dd + ' ' + hh + ':' + mm + ':' + ss);
 }
+
+
+
