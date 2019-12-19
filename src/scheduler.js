@@ -128,6 +128,7 @@ const isInScanWindow = function () {
                     } else { 
                         logger.error('Error pausing scan on ASoC.  Error: ' + JSON.stringify(data)); 
                     }
+                    logger.verbose('Pausing scan on asoc response: ' + JSON.stringify(data));
                     callback();
                 });
             } else if (scanDetails.isInsideWindow === true && (scanStatus === 'Ready' || scanStatus === 'Paused' || scanStatus === 'notStarted')) {
