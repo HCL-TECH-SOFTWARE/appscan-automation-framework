@@ -31,7 +31,7 @@ if (arguments == '-uninstall') {
     unistallService = true;
 }
 
-
+console.log('LOCCC: ' + locOfASEProxyFile)
 // Create a new service object
 var aseService = new service({
     name: 'HCL Security AppScan Scheduler',
