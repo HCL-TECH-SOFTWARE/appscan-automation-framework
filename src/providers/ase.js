@@ -25,13 +25,25 @@ var ase = module.exports;
 
 
 /**
- * Get applications from ASE
+ * Get ALL applications from ASE (this function only supports range and not filters)
+ * @param {Object} range - (OPTIONAL) has to keys: start and end, allows controll of what data to send.  If nothing sent
+ * defaults to start at 0 and end at 99
  */
-ase.getApp = function (callback) {
+ase.getApps = function (callback, range) {
     let getAppURL = '/applications';
+    let startRange = 0;
+    let endRange = 99;
+    if (range) {
+        if (range.start) {
+            startRange = range.start;
+        }
+        if (range.end) {
+            endRange = range.end;
+        }
+    }
     let headerData = {
         header: {
-            range: "items=0-9999"
+            range: "items=" + startRange + '-' + endRange
         }
     }
 
@@ -816,7 +828,7 @@ ase.updateFolder = function (folderID, folderName, description, contact, callbac
  * Create security permission for user
  * 
  * @param {*} userID - ID of the user to add the user security permissions
- * @param {*} serverGroupIDList - List of server group IDs seperated by semicolon (;)
+ * @param {*} serverGroupIDList - List of server group IDs seperated by commas (,)
  * @param {*} testPolicyID - Test Policy ID
  */
 ase.createUserSecurityPermission = function (userID, serverGroupIDList, testPolicyID, callback) {
