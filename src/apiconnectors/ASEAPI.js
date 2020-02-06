@@ -86,6 +86,20 @@ module.exports = {
         })
     },
 
+
+    doUploadContentJobTraffic: function (url, fileLoc) {
+        return new Promise((resolve, reject) => {
+            uploadContentJobTraffic(url, fileLoc, function (err, response) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(response);
+                }
+            })
+        })
+    },
+
     doDelete: function (url, body, header) {
         return new Promise((resolve, reject) => {
             del(url, body, function (err, response) {
@@ -571,6 +585,52 @@ var uploadDASTFile = function (url, body, fileLoc, callback) {
     })
 }
 
+
+var uploadContentJobTraffic = function (url, fileLoc, callback) {
+    loginToASE(function () {
+        let requestURL = ASEURL + url
+
+        const fd = new FormData();
+
+        const headers = {
+            'Cookie': token.cookie,
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'multipart/form-data; boundary=' + fd.getBoundary(),
+            'asc_xsrf_token':token.sessionID
+        };
+
+        if (!fs.existsSync(fileLoc)) {
+            callback('File not found: ' + fileLoc, null, null);
+            return;
+        }
+
+        //fd.append('uploadedfile', fs.createReadStream(fileLoc), { contentType: 'application/xml', filename: path.basename(fileLoc) });
+        fd.append('uploadfile', fs.createReadStream(fileLoc), { 'Content-Disposition': 'form-data', 'Content-Type': 'application/octet-stream', filename: path.basename(fileLoc) });
+ 
+        
+        request({
+            headers: headers,
+            url: requestURL,
+            method: "POST",
+            json: false,
+            body: fd,
+            //proxy: 'http://127.0.0.1:8080',
+            rejectUnauthorized: false
+        }, function (error, response) {
+            if (error) {
+                callback(error, null);
+            } else {
+                if (response.headers.location == '/ase/LicenseWarning.aspx') {
+                    logger.error('Error your AppScan Enterprise license is expiring soon warning.  You must extend your license to resolve this know issue with certain API endpoints.  (Legacy API)');
+                }
+                callback(null, response);
+            }
+        });
+    });
+}
 
 loginToASE(() => {
 })
