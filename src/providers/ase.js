@@ -1017,6 +1017,198 @@ ase.getListOfDASTJobs = function (folderID, callback) {
         })
 }
 
+/**
+ * Create content scan job in specific folder
+ * @param {*} folderId - folderId where job will be created
+ * @param {*} appId - id of app job will be associated with
+ * @param {*} templateId - template scan job will be created from
+ */
+ase.createConentScanJob = function (folderId, appId, templateId, scanName, callback) {
+    logger.debug('Creating content scan job...');
+    //TODO validate scanName
+    let postFolderIdURL = '/folders/' + parseInt(folderId,10).toString() + '/folderitems' 
+                        + '?templateId=' + parseInt(templateId,10).toString() 
+                        + '&appId=' + parseInt(appId,10).toString()
+
+    let jobBody = {
+        "name": scanName,
+        "description": "",
+        "payLoad": ""
+        }
+
+    let header = {
+        "Accept": 'application/xml'
+    }
+
+    aseapi.doPost(postFolderIdURL, jobBody, header)
+        .then((jobinfo) => {
+            callback(jobinfo);
+        })
+        .catch((err) => {
+            logger.error('Error trying to create content scan job, ' + err);
+            if (global.emitErrors) util.emitError(err);
+        })
+}
+
+/**
+ * Update content scan job starting url
+ * @param {*} folderItemId - folderItemId of content scan job to update
+ * @param {*} startingUrl - starting url to add to content scan job
+ */
+ase.updateConentScanJobStartingURL = function (folderItemId, startingUrl, callback) {
+  
+    // post /folderitems/{folderItemId}/options/{option} 
+    let option = 'epcsCOTListOfStartingUrls';
+    let postUpdateURL = '/folderitems/' + parseInt(folderItemId,10).toString() 
+                      + '/options/'+ option
+                      + '?perform=put=1'
+
+    //TODOvalidate url                    
+    let body = {
+        "value": startingUrl
+        }
+
+    let header = {
+        "Accept": 'application/xml'
+    }
+
+    aseapi.doPost(postUpdateURL, body, header)
+        .then((jobinfo) => {
+            callback(jobinfo);
+        })
+        .catch((err) => {
+            logger.error('Error trying to create content scan job, ' + err);
+            if (global.emitErrors) util.emitError(err);
+        })
+}
+
+/**
+ * Update content scan job with recorded login data 
+ * @param {*} jobId - folder item id of content scan job to update
+ * @param {*} action - The traffic actions available are as follows:
+    Traffic action 'add' - Adds the new traffic to the job.
+    Traffic action 'del' - Removes existing login data 
+   @param {*} format - har or dast  
+   @param {*} fileLoc - location of the traffic file  
+ */
+ase.updateContentScanJobLogin = function (jobId, action, format, fileLoc, callback) {
+    let actionstr = '';
+    if (action === 'add') {actionstr = '?Put=1'};
+    if (action === 'del') {actionstr = '?delete=1'};
+
+    if (format !== 'har' && format !== 'dast') {
+        format = '';
+    }
+    
+    let updateContentJobLoginURL = '/folderitems/' + parseInt(jobId,10).toString() + '/recordedlogindata'
+                          + actionstr + '&Format=' + format;
+    console.log(updateContentJobLoginURL);
+
+    aseapi.doUploadContentJobTraffic(updateContentJobLoginURL, fileLoc)
+        .then((data) => {
+            console.log(data);
+            if (data.statusCode == 200) {
+                callback({
+                    success: true,
+                    msg: data
+                })
+            } else {
+                callback({
+                    success: false,
+                    msg: 'Error trying to update job, ' + data.errorMessage                    
+                })
+            }
+        })
+        .catch((err) => {
+            logger.error('Error trying to update job,' + JSON.stringify(err));
+            if (global.emitErrors) util.emitError(err);
+        })
+}
+
+/**
+ * Update content scan job with ME data 
+ * @param {*} jobId - folder item id of content scan job to update
+ * @param {*} action - The traffic actions available are as follows:
+    Traffic action 'add' - Adds the new traffic to the job.
+    Traffic action 'del' - Removes existing login data 
+   @param {*} format - har or dast  
+   @param {*} fileLoc - location of the traffic file  
+ */
+ase.updateContentScanJobExplore = function (jobId, action, format, fileLoc, callback) {
+    let actionstr = '';
+    if (action === 'add') {actionstr = '?Put=1'};
+    if (action === 'del') {actionstr = '?delete=1'};
+
+    if (format !== 'har' && format !== 'dast') {
+        format = '';
+    }
+    
+   // /ase/api/folderitems/198/httptrafficdata?put=1&format=dast&includeformfills=1
+    let updateContentJobTrafficURL = '/folderitems/' + parseInt(jobId,10).toString() + '/httptrafficdata'
+                          + actionstr + '&Format=' + format +'&includeformfills=1';
+    console.log(updateContentJobTrafficURL);
+
+    aseapi.doUploadContentJobTraffic(updateContentJobTrafficURL, fileLoc)
+        .then((data) => {
+            console.log(data);
+            if (data.statusCode == 200) {
+                callback({
+                    success: true,
+                    msg: data
+                })
+            } else {
+                callback({
+                    success: false,
+                    msg: 'Error trying to update job, ' + data.errorMessage                    
+                })
+            }
+        })
+        .catch((err) => {
+            logger.error('Error trying to update job,' + JSON.stringify(err));
+            if (global.emitErrors) util.emitError(err);
+        })
+}
+
+
+/**
+ * Update folder item status 
+ * @param {*} folderItemId - folderItemId of content scan job to update
+ * @param {*} action - starting url to add to content scan job
+ */
+ase.updateFolderItemStatus = function (folderItemId, action, callback) {
+    let postUpdateURL = '/folderitems/' + parseInt(folderItemId,10).toString() 
+    let actionvalue = null;
+    switch (action) {
+        case "run":
+            actionvalue = 2;
+            break;
+        case "end":
+            actionvalue = 5;
+            break;
+        default:
+            logger.error('Invalid action');
+            return;
+    }
+           
+    let body = actionvalue;
+        
+    console.log('actionvalue is  ' + actionvalue);
+
+    console.log('body is ' + JSON.stringify(body));
+
+    let header = {
+        "Accept": 'application/xml'
+    }
+
+    aseapi.doPost(postUpdateURL, body, header)
+        .then((jobinfo) => {
+            callback(jobinfo);
+        })
+        .catch((err) => {
+            logger.error('Error trying to update folderitem status, ' + err);
+            if (global.emitErrors) util.emitError(err);
+        })
+}
 
 /**
  * Gets details about a DAST job
@@ -1046,7 +1238,9 @@ ase.getDASTJobDetails = function (jobID, callback) {
  */
 ase.getDASTScanStatistics = function (folderItemID, callback) {
     logger.debug('Getting statistics of DAST scan job in ASE...');
-    let getDASTScanStatisticsURL = '/folderitems/' + folderItemID + '/statistics/xml';
+   // let getDASTScanStatisticsURL = '/folderitems/' + folderItemID + '/statistics/xml';
+    let getDASTScanStatisticsURL = '/folderitems/' + folderItemID + '/statistics';
+
     let header = {
         Accept: 'application/xml',
         json: false
