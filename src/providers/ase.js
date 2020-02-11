@@ -27,7 +27,7 @@ var ase = module.exports;
 /**
  * Get ALL applications from ASE (this function only supports range and not filters)
  * @param {Object} range - (OPTIONAL) has to keys: start and end, allows controll of what data to send.  If nothing sent
- * defaults to start at 0 and end at 99. EXAMPLE: {start: 0, end: 99}
+ * defaults to start at 0 and end at 99. EXAMPLE: range = {start: 0, end: 99}
  */
 ase.getApps = function (callback, range) {
     let getAppURL = '/applications';
