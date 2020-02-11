@@ -19,8 +19,9 @@ const he = require('he');
 const Json2csvParser = require('json2csv').Parser;
 const lineReplace = require('line-replace');
 
-
-
+ase.getApp(app => {
+    console.log('apps: ' + JSON.stringify(app));
+})
 // Global variables
 const doASEAuditReport = config.ASE_Audit_Report;
 const doASoCAuditReport = config.ASoC_Audit_Report;
