@@ -330,8 +330,8 @@ var download = function (url, targetSubDir, callback, header) {
                 if (res.statusCode == 200) {
                     // extract filename
                     //et filename = regexp.exec(res.headers['content-disposition'])[1];
-                    
-                    let filename = 'AppScanReportOutput-'+ Date.now() + '.zip';
+
+                    let filename = 'AppScanReportOutput-' + Date.now() + '.zip';
                     //console.log('filename' + filename);
 
                     // create file write stream
@@ -350,7 +350,7 @@ var download = function (url, targetSubDir, callback, header) {
             })
             .on('error', function (err) {
                 console.log('response' + JSON.stringify(err));
-                callback(err,null);
+                callback(err, null);
             })
     })
 }
@@ -473,67 +473,66 @@ var put = function (url, body, callback) {
     })
 }
 
+var upload = function (url, body, fileLoc, uploadType, callback) {
+    if (!fs.existsSync(fileLoc)) {
+        callback('File not found: ' + fileLoc, null, null);
+        return;
+    }
 
-
-
-
-
-var uploadFile = function (url, body, fileLoc, callback) {
-    loginToASE(function () {
-        fs.readFile(fileLoc, 'utf8', function (err, data) {
-            if (err) {
-                if (global.emitErrors) util.emitError(err);
-                return logger.error('Error trying to upload findings to ASE.  Error: ' + err);
-            }
-            //console.log(data);
-            var fd = new FormData();
+    loginToASE(() => {
+        let requestURL = ASEURL + url
+        //Construct the form, first with all of the body parameters, then with the file
+        const fd = new FormData();
+        const headers = {
+            Cookie: token.cookie,
+            asc_xsrf_token: token.sessionID,
+            'Content-Type': 'multipart/form-data; boundary=' + fd.getBoundary(),
+            Accept: "application/json, text/javascript, */*; q=0.01",
+            'Accept-Encoding': 'gzip, deflate, br',
+        };
+        if (body) {
+            Object.keys(body).forEach(function (key) {
+                const val = body[key];
+                fd.append(key, (typeof val === 'object' ? JSON.stringify(val) : val));
+            });
+        }
+        if (uploadType == 'dast_file') {
             fd.append('asc_xsrf_token', token.sessionID)
-            //fd.append('scanName', path.basename(fileLoc))
+            headers['Accept-Language'] = 'en-US,en';
+        }
+        if (uploadType == 'content_job') {
+            headers['X-Requested-With'] = 'XMLHttpRequest';
+            fd.append('uploadfile', fs.createReadStream(fileLoc), { 'Content-Disposition': 'form-data', 'Content-Type': 'application/octet-stream', filename: path.basename(fileLoc) });
+        } else {
+            fd.append('uploadedfile', fs.createReadStream(fileLoc), { contentType: 'application/xml', filename: path.basename(fileLoc) });
+        }
 
-            if (body) {
-                Object.keys(body).forEach(function (key) {
-                    const val = body[key];
-                    fd.append(key, (typeof val === 'object' ? JSON.stringify(val) : val));
-                });
-            }
-
-            if (!fs.existsSync(fileLoc)) {
-                callback(null, 'File not found: ' + fileLoc);
-                return;
-            }
-
-
-            fd.append('uploadedfile', data, { contentType: 'text/xml', filename: path.basename(fileLoc) })
-
-            let requestURL = ASEURL + url
-            //console.log('FDDD: ' + JSON.stringify(fd));
-            request({
-                headers: {
-                    Cookie: token.cookie,
-                    asc_xsrf_token: token.sessionID,
-                    'Content-Type': 'multipart/form-data; boundary=' + fd.getBoundary(),
-                    Accept: "application/json, text/javascript, */*;q=0.01",
-                    'Accept-Encoding': 'gzip, deflate, br',
-                    'Accept-Language': 'en-US,en'
-                },
-                url: requestURL,
-                method: "POST",
-                json: false,   // <--Very important!!!
-                body: fd,
-                rejectUnauthorized: false
-            }, function (error, response) {
-                if (error) {
-                    callback(err, null);
-                } else {
-                    if (response.headers.location == '/ase/LicenseWarning.aspx') {
-                        logger.error('Error your AppScan Enterprise license is expiring soon warning.  You must extend your license to resolve this know issue with certain API endpoints.  (Legacy API)');
-                    }
-                    callback(null, response);
+        request({
+            headers: headers,
+            url: requestURL,
+            method: "POST",
+            json: false,
+            body: fd,
+            rejectUnauthorized: false
+        }, function (error, response) {
+            if (error) {
+                callback(error, null);
+            } else {
+                if (response.headers.location == '/ase/LicenseWarning.aspx') {
+                    logger.error('Error your AppScan Enterprise license is expiring soon warning.  You must extend your license to resolve this know issue with certain API endpoints.  (Legacy API)');
                 }
-            })
-        })
+                callback(null, response);
+            }
+        });
     })
 }
+
+
+
+
+
+
+
 
 
 var uploadDASTFile = function (url, body, fileLoc, callback) {
@@ -599,7 +598,7 @@ var uploadContentJobTraffic = function (url, fileLoc, callback) {
             'Accept-Encoding': 'gzip, deflate',
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': 'multipart/form-data; boundary=' + fd.getBoundary(),
-            'asc_xsrf_token':token.sessionID
+            'asc_xsrf_token': token.sessionID
         };
 
         if (!fs.existsSync(fileLoc)) {
@@ -609,8 +608,8 @@ var uploadContentJobTraffic = function (url, fileLoc, callback) {
 
         //fd.append('uploadedfile', fs.createReadStream(fileLoc), { contentType: 'application/xml', filename: path.basename(fileLoc) });
         fd.append('uploadfile', fs.createReadStream(fileLoc), { 'Content-Disposition': 'form-data', 'Content-Type': 'application/octet-stream', filename: path.basename(fileLoc) });
- 
-        
+
+
         request({
             headers: headers,
             url: requestURL,
@@ -631,6 +630,3 @@ var uploadContentJobTraffic = function (url, fileLoc, callback) {
         });
     });
 }
-
-loginToASE(() => {
-})

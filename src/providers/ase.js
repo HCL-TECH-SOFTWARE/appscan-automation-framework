@@ -418,14 +418,13 @@ ase.getAllUsers = function (callback) {
 
     aseapi.doGet(getAllUsersURL)
         .then((data) => {
-            logger.debug('Called')
             callback(data);
         })
         .catch((err) => {
             logger.error('Error trying to get all users from AppScan Enterprise.  Error: ' + err);
             if (global.emitErrors) util.emitError(err);
         })
-}
+    }
 
 /**
  * Upload XML to ASE
