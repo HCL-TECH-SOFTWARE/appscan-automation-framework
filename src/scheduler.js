@@ -138,7 +138,7 @@ const isInScanWindow = function () {
                         if (data.statusCode == 200) {
                             logger.debug('Successfully started scan');
                         } else {
-                            logger.error('Error starting scan on ASoC.  Error: ' + data.body);
+                            logger.error('Error starting scan on ASoC.  Error: ' + JSON.stringify(data.body));
                         }
                         callback();
                     });
