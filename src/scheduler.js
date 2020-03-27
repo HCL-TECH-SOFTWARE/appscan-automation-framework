@@ -123,7 +123,7 @@ const isInScanWindow = function () {
                 // pause scan
                 logger.debug('Scan is running but scan window has expired - pausing scan, scanExecutionId:  ' + scanExecutionId);
                 asoc.pauseOrResumeDASTScan('Pause', scanExecutionId, (data) => {
-                    if (data.statusCode == 200) { 
+                    if (data.statusCode == 201) { 
                         logger.debug('Successfully paused scan'); 
                     } else { 
                         logger.error('Error pausing scan on ASoC.  Error: ' + data.body); 
@@ -145,7 +145,7 @@ const isInScanWindow = function () {
                 } else {
                     logger.debug('Inside valid scan window. Scan is currently paused. Restarting scanExecutionId:  ' + scanExecutionId);
                     asoc.pauseOrResumeDASTScan('Resume', scanExecutionId, (data) => {
-                        if (data.statusCode == 200) {
+                        if (data.statusCode == 201) {
                             logger.debug('Successfully resumed scan');
                         } else {
                             logger.error('Error resuming scan on ASoC.  Error: ' + JSON.stringify(data.body));
