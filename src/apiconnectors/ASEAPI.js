@@ -257,6 +257,7 @@ var get = function (url, callback, header) {
                 headerInfo.headers.Accept = header.Accept
             }
         }
+        console.log('GET headers: ' + JSON.stringify(headerInfo));
         request({
             headers: headerInfo.headers,
             url: requestURL,

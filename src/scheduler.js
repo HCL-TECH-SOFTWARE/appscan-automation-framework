@@ -135,7 +135,7 @@ const isInScanWindow = function () {
                 if (scanStatus === 'notStarted') {
                     logger.debug('Inside valid scan window. Scan not previously started. Starting scanId:  ' + scanDetails.scanId);
                     asoc.startDASTScan(scanDetails.scanId, (data) => {
-                        if (data.statusCode == 200) {
+                        if (data.statusCode == 201) {
                             logger.debug('Successfully started scan');
                         } else {
                             logger.error('Error starting scan on ASoC.  Error: ' + JSON.stringify(data.body));
