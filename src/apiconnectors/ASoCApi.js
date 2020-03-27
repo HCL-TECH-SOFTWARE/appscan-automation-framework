@@ -127,6 +127,10 @@ var loginASoC = function (callback) {
     }, function (error, response, body) {
         //console.log('RESPONSE: ' + JSON.stringify(response))
         if (response != undefined) {
+            // Check if creds are wrong
+            if (response.statusCode == 401) {
+                return logger.error('Error trying to log into Application Security on Cloud, ' + response.body.Message);
+            }
             setASoCSession(body.Token, () => {
                 token = body.Token;
                 callback();
