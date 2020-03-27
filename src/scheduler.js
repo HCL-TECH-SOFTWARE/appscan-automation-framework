@@ -123,7 +123,7 @@ const isInScanWindow = function () {
                 // pause scan
                 logger.debug('Scan is running but scan window has expired - pausing scan, scanExecutionId:  ' + scanExecutionId);
                 asoc.pauseOrResumeDASTScan('Pause', scanExecutionId, (data) => {
-                    if (data.statusCode == 200) { 
+                    if (data.statusCode == 201) { 
                         logger.debug('Successfully paused scan'); 
                     } else { 
                         logger.error('Error pausing scan on ASoC.  Error: ' + data.body); 
@@ -135,20 +135,20 @@ const isInScanWindow = function () {
                 if (scanStatus === 'notStarted') {
                     logger.debug('Inside valid scan window. Scan not previously started. Starting scanId:  ' + scanDetails.scanId);
                     asoc.startDASTScan(scanDetails.scanId, (data) => {
-                        if (data.statusCode == 200) {
+                        if (data.statusCode == 201) {
                             logger.debug('Successfully started scan');
                         } else {
-                            logger.error('Error starting scan on ASoC.  Error: ' + data.body);
+                            logger.error('Error starting scan on ASoC.  Error: ' + JSON.stringify(data.body));
                         }
                         callback();
                     });
                 } else {
                     logger.debug('Inside valid scan window. Scan is currently paused. Restarting scanExecutionId:  ' + scanExecutionId);
                     asoc.pauseOrResumeDASTScan('Resume', scanExecutionId, (data) => {
-                        if (data.statusCode == 200) {
+                        if (data.statusCode == 201) {
                             logger.debug('Successfully resumed scan');
                         } else {
-                            logger.error('Error resuming scan on ASoC.  Error: ' + data.body);
+                            logger.error('Error resuming scan on ASoC.  Error: ' + JSON.stringify(data.body));
                         }
                         callback();
                     });
