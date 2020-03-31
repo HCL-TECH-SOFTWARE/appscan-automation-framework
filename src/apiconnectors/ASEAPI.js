@@ -272,7 +272,7 @@ var download = function (url, targetSubDir, callback, header) {
             encoding: null
         })
             .on('response', function (res) {
-                console.log('response' + JSON.stringify(res));
+                //console.log('response' + JSON.stringify(res));
                 if (res.statusCode == 401) {
                     logger.error('Error trying to call ASE, ' + response.body.errorMessage);
                 }
