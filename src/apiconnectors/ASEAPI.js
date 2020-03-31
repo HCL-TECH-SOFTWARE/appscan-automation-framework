@@ -5,10 +5,8 @@ var request = require('request');
 var fs = require('fs');
 var FormData = require('form-data');
 const path = require('path');
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 var moment = require('moment');
 var url = require("url"),
-    http = require("http"),
     env = process.env;
 const util = require('../util.js');
 
@@ -35,15 +33,8 @@ var token = {
 }
 // How often to refresh the ASE token so it does not expire in minutes
 const ASETokenRefreshTime = 20;
-var location;
 // URL for AppScan Enterprise
 var ASEURL = config.ASEURL;
-// Credentials to log into AppScan Enterprise - DomainName\UserName
-var ASEUserID = config.ASEUserID;
-// Password for credentials to log into AppScan Enterprise
-var ASEPass = config.ASEPass;
-// Does user use proxy
-const toUseProxy = config.aseProxy.useProxy;
 
 
 // Exportable functions --------------------------------
@@ -157,44 +148,6 @@ module.exports = {
 // END Exportable functions ------------------------------------
 
 
-// Logs into AppScan Enterprise and stores token and session information - Uses user name and password (DEPRECATED)
-// var loginToASE = function (callback) {
-//     if (token.sessionID && moment().unix() < (parseInt(token.timeCreated) + (parseInt(ASETokenRefreshTime) * 60))) {
-//         //token still valid
-//         callback();
-//     } else {
-//         // token not valid
-//         console.log('Logging into AppScan Enterprise...');
-//         var loginURL = ASEURL + '/login'
-//         var loginBody = {
-//             userId: ASEUserID,
-//             password: ASEPass,
-//             featureKey: "AppScanEnterpriseUser"
-//         }
-//         request({
-//             url: loginURL,
-//             method: "POST",
-//             json: true,
-//             body: loginBody,
-//             rejectUnauthorized: false
-//         }, function (error, response, body) {
-//             //console.log('RESPONSE: ' + JSON.stringify(response))
-//             if (response != undefined) {
-//                 token.cookie = response.headers['set-cookie'];
-//                 //console.log('TOKEN: ' + body.sessionId)
-//                 token.sessionID = body.sessionId;
-//                 token.timeCreated = moment().unix();
-//                 callback();
-//             }
-//             else {
-//                 logger.error('Can not connect to AppScan Enterprise Server at host: ' + ASEURL + '.  Make sure you can connect to this host first!');
-//                 if (global.emitErrors) util.emitError(error);
-//             }
-//         })
-//     }
-// }
-
-
 // Use API Token to log into ASE
 var loginToASE = function (callback) {
     if (token.sessionID && moment().unix() < (parseInt(token.timeCreated) + (parseInt(ASETokenRefreshTime) * 60))) {
@@ -257,7 +210,7 @@ var get = function (url, callback, header) {
                 headerInfo.headers.Accept = header.Accept
             }
         }
-        console.log('GET headers: ' + JSON.stringify(headerInfo));
+        //console.log('GET headers: ' + JSON.stringify(headerInfo));
         request({
             headers: headerInfo.headers,
             url: requestURL,
@@ -319,7 +272,7 @@ var download = function (url, targetSubDir, callback, header) {
             encoding: null
         })
             .on('response', function (res) {
-                console.log('response' + JSON.stringify(res));
+                //console.log('response' + JSON.stringify(res));
                 if (res.statusCode == 401) {
                     logger.error('Error trying to call ASE, ' + response.body.errorMessage);
                 }
